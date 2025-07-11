@@ -1,0 +1,15 @@
+
+
+0 2
+0 0
+3 3
+1
+0
+
+simType OneDim
+simType 1d
+simType aoao
+
+axis 1 0 0
+axis 0 1 0
+axis 0 0 1
