@@ -17,7 +17,7 @@ SOURCES = $(wildcard $(SRCDIR)/*.cpp)
 OBJECTS = $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SOURCES))
 
 # The final executable file
-EXECUTABLE = scattering.out
+EXECUTABLE = ScatteringSimulator.out
 
 all: $(SOURCES) $(EXECUTABLE)
 
