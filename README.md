@@ -2,6 +2,10 @@
 
 C++11 program that executes a scattering simulation of a system of particles of different shape, multithreaded with OpenMP.
 
+## Theoretical background
+
+# DA INSERIRE COSA FACCIO, DA PARTICELLA A MESH DI PUNTI -> CALCOLO RHO CON FORMULA
+
 ## Installation
 
 At the moment, only Linux platforms are available.
@@ -20,7 +24,9 @@ make -j
 
 ## Documentation
 
-### Input
+The code takes as input two files: the particle configuration (particles shapes and positions) and the simulation configuration file (which type of simulation the user wants to perform).
+
+### Particle configuration file
 
 The input file first row contains the length $(Lx, Ly, Lz)$ of the box, e.g. ```50 50 50```. Then, each row represents a particle in the system.
 
@@ -81,3 +87,7 @@ SQUAD s_a s_b s_c r s t
 ```
 where $(s_a, s_b, s_c)$ are the three semiaxes of the superquadric, and $(r, s, t)$ are the exponents that define the superquadric:
 $$\left|\frac{x}{s_a} \right|^r + \left|\frac{x}{s_b} \right|^s + \left|\frac{x}{s_c} \right|^t = 1 $$
+
+### Simulation configuration file
+
+In the second file are present all the simulation related info, such as the type of simulation or the mesh density of the scattering points.
