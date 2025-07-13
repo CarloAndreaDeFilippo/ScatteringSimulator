@@ -4,7 +4,15 @@ C++11 program that executes a scattering simulation of a system of particles of 
 
 ## Theoretical background
 
-# DA INSERIRE COSA FACCIO, DA PARTICELLA A MESH DI PUNTI -> CALCOLO RHO CON FORMULA
+Each particle in the system is substituted with a random cloud of scattering points. The program computes the static structure factor of the input set of particles:
+
+$$S(\vec{q}) = \left\langle \frac{1}{N} \rho_{\vec{q}} \rho_{-\vec{q}} \right\rangle$$
+
+where $N$ is the number of scattering points, $\langle ... \rangle$ is the average over different configurations, $\vec{q}$ is the direction of the scattering vector (i.e. the direction of the scattered wave), and $\rho_{\vec{q}}$ is the Fourier transform of the microscopic density:
+
+$$\rho_{\vec{q}} = \sum_i^N e^{- i \vec{q} \cdot \vec{r}_i}$$
+
+where $\vec{r}_i$ is the position of the scattering points.
 
 ## Installation
 
@@ -48,6 +56,10 @@ where
 * ```SHAPE_NAME``` and ```SHAPE_ATTRIBUTES``` define the type of particle
 * $(x, y, z)$ is the center of mass
 * $R$ is the rotation matrix of the particle that describes its orientation.
+
+In the docs folder there is a configuration example with all the available particles:
+
+![Available particle shapes](/docs/particleShapesExample.png)
 
 In the following, the shape names and their attributes for all the available shapes.
 

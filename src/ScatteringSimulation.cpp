@@ -4,7 +4,7 @@
 #include <fstream>
 #include <iostream>
 
-void ScatteringSimulation::loadConfig(const std::string& fileName) {
+void ScatteringSimulation::loadSettings(const std::string& fileName) {
   std::ifstream file(fileName);
   if (!file.is_open()) {
     std::cout << "Error opening " << fileName << "\n";

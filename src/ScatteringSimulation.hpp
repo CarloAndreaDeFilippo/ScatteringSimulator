@@ -15,5 +15,5 @@ class ScatteringSimulation {
   double qmax;
   double rhoSP;
 
-  void loadConfig(const std::string& fileName);
+  void loadSettings(const std::string& fileName);
 };

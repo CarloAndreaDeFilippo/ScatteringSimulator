@@ -15,7 +15,7 @@
 int main() {
   ScatteringSimulation scattSim;
 
-  scattSim.loadConfig("config.json");
+  scattSim.loadSettings("settings.json");
 
   // Read the names of the files
 
