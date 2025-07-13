@@ -4,7 +4,7 @@ C++11 program that executes a scattering simulation of a system of particles of 
 
 ## Theoretical background
 
-Each particle in the system is substituted with a random cloud of scattering points. The program computes the static structure factor of the input set of particles:
+Each particle in the system is substituted with a random cloud of scattering points. The program computes the static structure factor of the input set of particles [^1]:
 
 $$S(\vec{q}) = \left\langle \frac{1}{N} \rho_{\vec{q}} \rho_{-\vec{q}} \right\rangle$$
 
@@ -103,3 +103,6 @@ $$\left|\frac{x}{s_a} \right|^r + \left|\frac{x}{s_b} \right|^s + \left|\frac{x}
 ### Simulation configuration file
 
 In the second file are present all the simulation related info, such as the type of simulation or the mesh density of the scattering points.
+
+
+[^1]: ACS Nano 2022, 16, 2, 2558–2568
