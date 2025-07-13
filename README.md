@@ -1,14 +1,14 @@
 # ScatteringSimulator
 
-C++11 program that executes a scattering simulation of a system of particles of different shape, multithreaded with OpenMP.
+C++11 program for simulating scattering in a system of particles with different shapes, parallelized with OpenMP.
 
 ## Theoretical background
 
-Each particle in the system is substituted with a random cloud of scattering points. The program computes the static structure factor of the input set of particles [^1]:
+Each particle in the system is represented by a random cloud of scattering points. The program computes the static structure factor of the input set of particles [^1]:
 
 $$S(\vec{q}) = \left\langle \frac{1}{N} \rho_{\vec{q}} \rho_{-\vec{q}} \right\rangle$$
 
-where $N$ is the number of scattering points, $\langle ... \rangle$ is the average over different configurations, $\vec{q}$ is the direction of the scattering vector (i.e. the direction of the scattered wave), and $\rho_{\vec{q}}$ is the Fourier transform of the microscopic density:
+where $N$ is the number of scattering points, $\langle ... \rangle$ is the average over different configurations, $\vec{q}$ is the scattering vector (i.e. the direction of the scattered wave), and $\rho_{\vec{q}}$ is the Fourier transform of the microscopic density:
 
 $$\rho_{\vec{q}} = \sum_i^N e^{- i \vec{q} \cdot \vec{r}_i}$$
 
@@ -16,12 +16,12 @@ where $\vec{r}_i$ is the position of the scattering points.
 
 ## Installation
 
-At the moment, only Linux platforms are available.
+Currently, only Linux is supported.
 
 ### Requirements
 
 * C++11 compiler (g++)
-* OpenMP for parallelization
+* * OpenMP-enabled compiler (for parallelization)
 
 To build:
 
@@ -32,13 +32,13 @@ make -j
 
 ## Documentation
 
-The code takes as input two files: the particle configuration (particles shapes and positions) and the simulation configuration file (which type of simulation the user wants to perform).
+The code takes two input files: the particle configuration (shapes and positions) and the simulation configuration (which defines the type of simulation to run).
 
 ### Particle configuration file
 
-The input file first row contains the length $(Lx, Ly, Lz)$ of the box, e.g. ```50 50 50```. Then, each row represents a particle in the system.
+The first row of the input file contains the box dimensions $(Lx, Ly, Lz)$, e.g. ```50 50 50```. Each subsequent row represents a particle in the system.
 
-Different shapes of particles are implemented:
+The following particle shapes are supported:
 * Sphere
 * Cylinder
 * Spherocylinder (or capsule)
@@ -57,11 +57,11 @@ where
 * $(x, y, z)$ is the center of mass
 * $R$ is the rotation matrix of the particle that describes its orientation.
 
-In the docs folder there is a configuration example with all the available particles:
+The `docs` folder contains an example configuration with all available particle types:
 
 ![Available particle shapes](/docs/particleShapesExample.png)
 
-In the following, the shape names and their attributes for all the available shapes.
+Below are the shape names and their attributes for all available shapes.
 
 #### Sphere
 ```
@@ -79,7 +79,7 @@ where $D$ is the diameter of the cylinder and $L$ is its length.
 ```
 SPHCYL D L
 ```
-where $D$ is the diameter of the cylinder and $L$ is its length. The total length of the particle is ```L + D```.
+where $D$ is the diameter of the cylinder and $L$ is its length. The total length of the spherocylinder is ```L + D```.
 
 #### Box
 ```
@@ -102,7 +102,7 @@ $$\left|\frac{x}{s_a} \right|^r + \left|\frac{x}{s_b} \right|^s + \left|\frac{x}
 
 ### Simulation configuration file
 
-In the second file are present all the simulation related info, such as the type of simulation or the mesh density of the scattering points.
+The second file contains all simulation-related information, such as the type of simulation and the mesh density of the scattering points.
 
 
 [^1]: ACS Nano 2022, 16, 2, 2558–2568, [https://doi.org/10.1021/acsnano.1c09208](https://doi.org/10.1021/acsnano.1c09208)
