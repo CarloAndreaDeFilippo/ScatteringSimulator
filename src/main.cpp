@@ -13,9 +13,7 @@
 #include "rng.hpp"
 
 int main() {
-  ScatteringSimulation scattSim;
-
-  scattSim.loadSettings("settings.json");
+  ScatteringSimulation scattSim("settings.json");
 
   // Read the names of the files
 

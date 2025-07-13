@@ -21,7 +21,7 @@ std::vector<ScatteringPoint> Particle::generateScatteringPoints(double rhoSP) {
 std::string Particle::molgl() {
   std::string output = "";
 
-  //! ONLY DONE FOR BOXES AT THE MOMENT
+  //! ONLY DONE FOR BOXES AND SPHEROCYLINDERS AT THE MOMENT
 
   output += particleShape->molgl(tf);
 

@@ -9,11 +9,20 @@ class ScatteringSimulation {
   enum class SimType { OneDim,
                        TwoDim };
 
-  SimType simType;
+  enum class ScattType { Sq,
+                         Iq };
+
+  SimType simType = SimType::OneDim;
+  ScattType scattType = ScattType::Sq;
+
   std::vector<std::array<double, 3>> axes;
   double qmin;
   double qmax;
   double rhoSP;
 
-  void loadSettings(const std::string& fileName);
+  ScatteringSimulation() = default;
+
+  ScatteringSimulation(const std::string& scattFile);
+
+  void loadSettings(const std::string& scattFile);
 };

@@ -1,5 +1,6 @@
 {
     "simType": "1D",
+    "scattType": "Iq",
     "axes": [
         [
             1.0,
