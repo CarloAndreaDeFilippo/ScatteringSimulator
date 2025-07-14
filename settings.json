@@ -1,24 +1,38 @@
 {
     "simType": "1D",
     "scattType": "Iq",
-    "axes": [
-        [
-            1.0,
-            0.0,
-            0.0
-        ],
-        [
-            0.0,
-            1.0,
-            0.0
-        ],
-        [
-            0.0,
-            0.0,
-            1.0
-        ]
+    "scattVectors": [
+        {
+            "direction": [
+                1.0,
+                0.0,
+                0.0
+            ],
+            "qmin": 0.01,
+            "qmax": 10.0,
+            "dq": 0.1
+        },
+        {
+            "direction": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "qmin": 0.02,
+            "qmax": 9.5,
+            "dq": 0.1
+        },
+        {
+            "direction": [
+                0.0,
+                0.0,
+                1.0
+            ],
+            "qmin": 0.03,
+            "qmax": 8.0,
+            "dq": 0.1
+        }
     ],
-    "qmin": 0.01,
-    "qmax": 10.0,
-    "rhoSP": 1.0
+    "rhoSP": 1.0,
+    "ConfigurationsFolder": "Configurations"
 }

@@ -12,7 +12,7 @@ class Rho1D {
  public:
   double dq = 0.01;
   double qmin = 0.;    // Minimum q
-  size_t qqmax = 100;  // Maximum q index for matrices
+  size_t qqmax = 100;  // Maximum q index
 
   std::array<double, 3> qAxis = {1., 0., 0.};
   std::vector<double> qValues;

@@ -12,8 +12,12 @@
 #include "ScatteringSystem.hpp"
 #include "rng.hpp"
 
-int main() {
-  ScatteringSimulation scattSim("settings.json");
+int main(int argc, char** argv) {
+  if (argc < 2) {
+    std::cout << "Error, choose the settings file.\n";
+    exit(-1);
+  }
+  ScatteringSimulation scattSim(argv[1]);
 
   // Read the names of the files
 

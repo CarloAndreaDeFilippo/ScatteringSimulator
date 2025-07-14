@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include "ScatteringVector.hpp"
+#include "Utilities.hpp"
 #include "nlohmann/json.hpp"
 
 class ScatteringSimulation {
@@ -15,10 +17,10 @@ class ScatteringSimulation {
   SimType simType = SimType::OneDim;
   ScattType scattType = ScattType::Sq;
 
-  std::vector<std::array<double, 3>> axes;
-  double qmin;
-  double qmax;
+  std::vector<ScatteringVector> scattVectors;
   double rhoSP;
+
+  std::vector<std::string> configurationFiles;
 
   ScatteringSimulation() = default;
 

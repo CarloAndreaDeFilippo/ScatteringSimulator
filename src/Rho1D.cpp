@@ -24,7 +24,7 @@ void Rho1D::calculateRho(const std::vector<ScatteringPoint>& scatteringPoints) {
     std::complex<double> sum = 0.;
 
     for (auto& sp : scatteringPoints) {
-      sum += exp(-im * dotProduct(qAxis, sp.cm) * qValues[qq]);
+      sum += std::exp(-im * dotProduct(qAxis, sp.cm) * qValues[qq]);
     }
 
     rho[qq] += sum;

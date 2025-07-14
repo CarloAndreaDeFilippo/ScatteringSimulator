@@ -49,17 +49,42 @@ void ScatteringSimulation::loadSettings(const std::string& scattFile) {
     std::exit(-1);
   }
 
+  // Scattering vectors
   try {
-    if (settings.contains("axes")) {
-      for (const auto& axis : settings["axes"]) {
-        axes.push_back({axis[0], axis[1], axis[2]});
+    if (settings.contains("scattVectors")) {
+      for (const auto& vector : settings["scattVectors"]) {
+        ScatteringVector scattVec;
+
+        scattVec.qAxis = {vector.at("direction").at(0).get<double>(),
+                          vector.at("direction").at(1).get<double>(),
+                          vector.at("direction").at(2).get<double>()};
+
+        if (vector.contains("qmin"))
+          scattVec.qmin = vector.at("qmin").get<double>();
+
+        if (vector.contains("qmax"))
+          scattVec.qmax = vector.at("qmax").get<double>();
+
+        if (vector.contains("dq"))
+          scattVec.dq = vector.at("dq").get<double>();
+
+        scattVectors.push_back(scattVec);
       }
     }
 
-    qmin = settings.value("qmin", 0.0);
-    qmax = settings.value("qmax", 0.0);
-    rhoSP = settings.value("rhoSP", 0.0);
+  } catch (const std::exception& e) {
+    std::cout << "Error parsing JSON: " << e.what() << "\n";
+    std::exit(-1);
+  }
 
+  // Mesh density
+  if (settings.contains("rhoSP"))
+    rhoSP = settings.at("rhoSP").get<double>();
+
+  // Configurations folder and files
+  try {
+    if (settings.contains("ConfigurationsFolder"))
+      configurationFiles = listFilesInDir(settings["ConfigurationsFolder"]);
   } catch (const std::exception& e) {
     std::cout << "Error parsing JSON: " << e.what() << "\n";
     std::exit(-1);
