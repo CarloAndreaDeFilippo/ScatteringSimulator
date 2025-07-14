@@ -4,12 +4,16 @@
 #include <iostream>
 #include <sstream>
 
+ParticleSystem::ParticleSystem(const std::string& infile) {
+  loadSystem(infile);
+}
+
 void ParticleSystem::addParticle(const Particle& part) {
   particles.push_back(part);
   N++;
 }
 
-void ParticleSystem::loadSystem(const std::string infile) {
+void ParticleSystem::loadSystem(const std::string& infile) {
   std::string line;
 
   std::string partType;
@@ -114,7 +118,7 @@ void ParticleSystem::loadSystem(const std::string infile) {
   }
 }
 
-void ParticleSystem::molgl(const std::string filename, const bool append) {
+void ParticleSystem::molgl(const std::string& filename, const bool append) {
   std::ofstream file_out;
 
   if (append == false) {

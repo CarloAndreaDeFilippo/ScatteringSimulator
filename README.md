@@ -21,7 +21,7 @@ Currently, only Linux is supported.
 ### Requirements
 
 * C++11 compiler (g++)
-* * OpenMP-enabled compiler (for parallelization)
+* OpenMP-enabled compiler (for parallelization)
 
 To build:
 

@@ -13,7 +13,10 @@ class ParticleSystem {
 
   std::array<double, 3> Lbox = {{1., 1., 1.}};
 
+  ParticleSystem() = default;
+  ParticleSystem(const std::string& infile);
+
   void addParticle(const Particle& part);
-  void loadSystem(const std::string infile);
-  void molgl(const std::string filename, const bool append);
+  void loadSystem(const std::string& infile);
+  void molgl(const std::string& filename, const bool append);
 };

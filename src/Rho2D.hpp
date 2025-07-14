@@ -8,6 +8,7 @@
 #include "ProgressBar.hpp"
 #include "ScatteringPoint.hpp"
 
+//! Placeholder class for 2D scattering
 class Rho2D {
  public:
   std::array<double, 3> qmin = {{0., 0., 0.}};  // Minimum value of q components

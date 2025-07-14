@@ -13,11 +13,25 @@
 #include "rng.hpp"
 
 int main(int argc, char** argv) {
+  // Initialization of the simulation
+  std::string scattFile = "settings.json";
+
   if (argc < 2) {
     std::cout << "Error, choose the settings file.\n";
     exit(-1);
   }
   ScatteringSimulation scattSim(argv[1]);
+
+  scattSim.performSimulation();
+
+  exit(0);
+
+  //
+
+  for (const auto& conf : scattSim.configurationFiles)
+    std::cout << conf << "\n";
+
+  //
 
   // Read the names of the files
 
@@ -40,8 +54,6 @@ int main(int argc, char** argv) {
   }
 
   file_in.close();
-
-  std::cout << "#Total configurations: " << configurations.size() << "\n";
 
   for (size_t n_conf = 0; n_conf < configurations.size(); n_conf++) {
     std::string conf_name = configurations[n_conf];

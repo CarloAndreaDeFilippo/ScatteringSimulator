@@ -83,12 +83,30 @@ void ScatteringSimulation::loadSettings(const std::string& scattFile) {
 
   // Configurations folder and files
   try {
-    if (settings.contains("ConfigurationsFolder"))
-      configurationFiles = listFilesInDir(settings["ConfigurationsFolder"]);
+    if (settings.contains("ConfigurationsFolder")) {
+      configurationFolder = settings["ConfigurationsFolder"];
+      configurationFiles = listFilesInDir(configurationFolder);
+    }
+
   } catch (const std::exception& e) {
     std::cout << "Error parsing JSON: " << e.what() << "\n";
     std::exit(-1);
   }
 
   file.close();
+}
+
+void ScatteringSimulation::performSimulation() {
+  std::cout << "#Total configurations: " << configurationFiles.size() << "\n";
+
+  // Loop over the configurations
+  for (size_t nConf = 0; nConf < configurationFiles.size(); nConf++) {
+    std::string confName = configurationFiles[nConf];
+    std::cout << "Configuration " << confName << "\n";
+
+    std::string particlesFile = configurationFolder + "/" + confName;
+
+    //  Load particles
+    ParticleSystem partSys(particlesFile);
+  }
 }
