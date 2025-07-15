@@ -4,109 +4,64 @@
 #include <fstream>
 #include <iostream>
 
-ScatteringSimulation::ScatteringSimulation(const std::string& scattFile) {
-  loadSettings(scattFile);
-}
+#include "ScatteringSystem.hpp"
 
-void ScatteringSimulation::loadSettings(const std::string& scattFile) {
-  std::ifstream file(scattFile);
-  if (!file.is_open()) {
-    std::cout << "Error opening " << scattFile << "\n";
-    std::exit(-1);
-  }
-
-  // Read simulation parameters from json file
-  nlohmann::json settings;
-  file >> settings;
-
-  std::cout << settings << "\n";
-
-  // Simulation type
-  try {
-    std::string typeStr = settings.at("simType");
-    if (typeStr == "1D") {
-      simType = SimType::OneDim;
-    } else {
-      throw std::runtime_error("Unknown simType: " + typeStr);
-    }
-  } catch (const std::exception& e) {
-    std::cout << "Error parsing JSON: " << e.what() << "\n";
-    std::exit(-1);
-  }
-
-  // Scattering type
-  try {
-    std::string typeStr = settings.at("scattType");
-    if (typeStr == "Sq") {
-      scattType = ScattType::Sq;
-    } else if (typeStr == "Iq") {
-      scattType = ScattType::Iq;
-    } else {
-      throw std::runtime_error("Unknown scattType: " + typeStr);
-    }
-  } catch (const std::exception& e) {
-    std::cout << "Error parsing JSON: " << e.what() << "\n";
-    std::exit(-1);
-  }
-
-  // Scattering vectors
-  try {
-    if (settings.contains("scattVectors")) {
-      for (const auto& vector : settings["scattVectors"]) {
-        ScatteringVector scattVec;
-
-        scattVec.qAxis = {vector.at("direction").at(0).get<double>(),
-                          vector.at("direction").at(1).get<double>(),
-                          vector.at("direction").at(2).get<double>()};
-
-        if (vector.contains("qmin"))
-          scattVec.qmin = vector.at("qmin").get<double>();
-
-        if (vector.contains("qmax"))
-          scattVec.qmax = vector.at("qmax").get<double>();
-
-        if (vector.contains("dq"))
-          scattVec.dq = vector.at("dq").get<double>();
-
-        scattVectors.push_back(scattVec);
-      }
-    }
-
-  } catch (const std::exception& e) {
-    std::cout << "Error parsing JSON: " << e.what() << "\n";
-    std::exit(-1);
-  }
-
-  // Mesh density
-  if (settings.contains("rhoSP"))
-    rhoSP = settings.at("rhoSP").get<double>();
-
-  // Configurations folder and files
-  try {
-    if (settings.contains("ConfigurationsFolder")) {
-      configurationFolder = settings["ConfigurationsFolder"];
-      configurationFiles = listFilesInDir(configurationFolder);
-    }
-
-  } catch (const std::exception& e) {
-    std::cout << "Error parsing JSON: " << e.what() << "\n";
-    std::exit(-1);
-  }
-
-  file.close();
-}
-
-void ScatteringSimulation::performSimulation() {
-  std::cout << "#Total configurations: " << configurationFiles.size() << "\n";
+void ScatteringSimulation::startSimulation() {
+  std::cout << "#Total configurations: " << simSettings.configurationFiles.size() << "\n";
 
   // Loop over the configurations
-  for (size_t nConf = 0; nConf < configurationFiles.size(); nConf++) {
-    std::string confName = configurationFiles[nConf];
+  for (auto& configuration : simSettings.configurationFiles) {
+    std::string confName = configuration;
     std::cout << "Configuration " << confName << "\n";
 
-    std::string particlesFile = configurationFolder + "/" + confName;
+    size_t lastindex = confName.find_last_of(".");
+    std::string confNameNoExtension = confName.substr(0, lastindex);
 
-    //  Load particles
+    std::string particlesFile = simSettings.configurationFolder + "/" + confName;
+
+    //  Load particles and initialize the system
     ParticleSystem partSys(particlesFile);
+
+    ScatteringSystem scattSys(simSettings.scattType);
+
+    scattSys.generateScatteringPoints(partSys.particles);
+
+    std::cout << "Number of scattering points: " << scattSys.NSP << "\n";
+
+    //! Only 1D sim for the moment
+
+    // TODO: logscale support
+    // TODO: 2D planes
+
+    // TODO: check for finite-size effects in dq
+
+    std::string outputFolder = simSettings.rho1DFolder + confNameNoExtension;
+    makeDirectory(simSettings.rho1DFolder);
+    makeDirectory(outputFolder);
+
+    // Initialize Rho1d
+    for (auto& scattVec : simSettings.scattVectors)
+      scattSys.vecRho1D.emplace_back(scattVec);
+
+    for (size_t vec = 0; vec < scattSys.vecRho1D.size(); vec++) {
+      auto& rho1d = scattSys.vecRho1D[vec];
+
+      rho1d.qVector.qqmax = static_cast<int>((rho1d.qVector.qmax - rho1d.qVector.qmin) / rho1d.qVector.dq);
+
+      rho1d.qVector.qValues.reserve(rho1d.qVector.qqmax);
+
+      for (size_t qq = 0; qq < rho1d.qVector.qqmax; qq++) {
+        double q = rho1d.qVector.qmin + qq * rho1d.qVector.dq;
+
+        rho1d.qVector.qValues.push_back(q);
+      }
+
+      rho1d.rho.resize(rho1d.qVector.qqmax, 0.);
+
+      rho1d.calculateRho(scattSys.scatteringPoints);
+
+      std::string outFile = outputFolder + "/axis_" + std::to_string(vec) + ".txt";
+      rho1d.exportData(scattSys.NSP, outFile);
+    }
   }
 }

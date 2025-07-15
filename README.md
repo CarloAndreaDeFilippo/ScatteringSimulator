@@ -79,7 +79,7 @@ where $D$ is the diameter of the cylinder and $L$ is its length.
 ```
 SPHCYL D L
 ```
-where $D$ is the diameter of the cylinder and $L$ is its length. The total length of the spherocylinder is ```L + D```.
+where $D$ is the diameter of the cylinder and $L$ is its length. The total length of the spherocylinder is $L + D$.
 
 #### Box
 ```

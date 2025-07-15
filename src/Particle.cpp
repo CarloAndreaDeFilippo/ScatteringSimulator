@@ -2,7 +2,7 @@
 
 #include <string>
 
-std::vector<ScatteringPoint> Particle::generateScatteringPoints(double rhoSP) {
+std::vector<ScatteringPoint> Particle::generateScatteringPoints(double rhoSP) const {
   std::vector<ScatteringPoint> sPoints = particleShape->generateScatteringPoints(rhoSP);
 
   for (auto& sp : sPoints) {

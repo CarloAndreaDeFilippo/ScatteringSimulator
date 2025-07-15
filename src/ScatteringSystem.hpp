@@ -7,36 +7,29 @@
 #include "Rho1D.hpp"
 #include "Rho2D.hpp"
 #include "ScatteringPoint.hpp"
+#include "ScatteringTypes.hpp"
+#include "SimulationTypes.hpp"
 
 class ScatteringSystem {
  public:
-  double rhoSP = 10.;                             // Density of scattering points
+  double rhoSP = 1.;                              // Density of scattering points
   size_t NSP = 0;                                 // Number of scattering points
   std::vector<ScatteringPoint> scatteringPoints;  // Total ensemble of scattering points
 
-  bool Sq = false;  // Calculate S(q) (generate only one scattering point per particle)
+  SimType simType = SimType::OneDim;
+  ScattType scattType = ScattType::Sq;
 
-  std::array<double, 3> qmin = {{0, 0, 0}};         // Minimum value of q components
-  std::array<double, 3> qmax = {{1, 1, 1}};         // Maximum value of q components
-  std::array<double, 3> dq = {{0.01, 0.01, 0.01}};  // Precision of q calculations
-  std::array<size_t, 3> qqmax = {{100, 100, 100}};  // Maximum q index for matrices
+  std::vector<Rho1D> vecRho1D;
 
-  int axis1 = 0;
-  int axis2 = 1;
+  //! Placeholder for 2D scattering
+  Rho2D rho2D;  // FT of microscopic density along the axis1/axis2 plane
 
-  Rho1D rho1D_1, rho1D_2;  // FT of microscopic density along axis1 and axis2
-  Rho2D rho2D;             // FT of microscopic density along the axis1/axis2 plane
+  ScatteringSystem() = default;
+  ScatteringSystem(ScattType sType) {
+    scattType = sType;
+  }
 
   //* Functions
-  void generateScatteringPoints(std::vector<Particle> particles);
-
-  void loadQ(const std::string infile);
-
-  void initializeRho();
-
-  void calculateRho();
-
-  void calculateRho1D();
-
+  void generateScatteringPoints(const std::vector<Particle>& particles);
   void cogli1(const std::array<double, 3>& L, const std::string filename, const bool append);
 };

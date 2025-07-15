@@ -11,7 +11,7 @@ void ProgressBar::printBar() {
   for (int i = 0; i < (int)progress + 1; i++) std::cout << "|";
   for (int i = 0; i < 100 - (int)progress; i++) std::cout << " ";
   std::cout << "] " << progress << "%\r";
-  std::cout.flush();
+  // std::cout.flush();
 }
 
 void ProgressBar::update() {

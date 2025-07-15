@@ -14,7 +14,7 @@ class Particle {
 
   std::shared_ptr<ParticleShape> particleShape;  // Geometry of the particle
 
-  std::vector<ScatteringPoint> generateScatteringPoints(double rhoSP);
+  std::vector<ScatteringPoint> generateScatteringPoints(double rhoSP) const;
 
   std::string molgl();
 };

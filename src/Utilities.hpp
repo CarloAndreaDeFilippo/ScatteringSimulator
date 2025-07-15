@@ -1,6 +1,7 @@
 #pragma once
 
 #include <dirent.h>
+#include <sys/stat.h>
 
 #include <iostream>
 
@@ -23,4 +24,10 @@ inline std::vector<std::string> listFilesInDir(const std::string& path) {
 
   closedir(dir);
   return fileNames;
+}
+
+//! Only Linux
+// C++11 function to create a directory
+inline void makeDirectory(const std::string& path) {
+  mkdir(path.c_str(), 0755);
 }
