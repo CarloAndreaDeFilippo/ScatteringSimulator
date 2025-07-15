@@ -43,8 +43,8 @@
 #vscode settings
 .vscode
 
-#Cogli1 folder
-Cogli1/
+#Cogli1 executable
+Cogli1/cogli2
 
 #Molgl folder
 Molgl/

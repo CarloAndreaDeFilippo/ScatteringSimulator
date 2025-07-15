@@ -22,6 +22,9 @@ class SimulationSettings {
 
   std::string outputFolder = "Data/rho1D/";
 
+  bool saveCogli1 = false;
+  std::string cogli1Folder = "Cogli1/";
+
   SimulationSettings() = default;
 
   SimulationSettings(const std::string& scattFile) {

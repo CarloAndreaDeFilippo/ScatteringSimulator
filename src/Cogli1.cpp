@@ -4,7 +4,7 @@
 #include <iomanip>
 #include <iostream>
 
-void Cogli1::box(const std::array<double, 3>& L, std::string filename) {
+void Cogli1::box(const std::array<double, 3>& Lbox, const std::string& filename) {
   std::ofstream file_out;
 
   file_out.open(filename);
@@ -16,7 +16,7 @@ void Cogli1::box(const std::array<double, 3>& L, std::string filename) {
 
   file_out << std::fixed << std::setprecision(16);
 
-  file_out << ".Box: " << L[0] << "," << L[1] << "," << L[2] << "\n";
+  file_out << ".Box: " << Lbox[0] << "," << Lbox[1] << "," << Lbox[2] << "\n";
 
   file_out.close();
 }

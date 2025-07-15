@@ -21,7 +21,7 @@ void ScatteringSystem::generateScatteringPoints(const std::vector<Particle>& par
   }
 }
 
-void ScatteringSystem::cogli1(const std::array<double, 3>& L, const std::string filename, const bool append) {
+void ScatteringSystem::cogli1(const std::array<double, 3>& Lbox, const std::string filename, const bool append) {
   std::ofstream file_out;
 
   if (append == false) {
@@ -37,9 +37,8 @@ void ScatteringSystem::cogli1(const std::array<double, 3>& L, const std::string 
 
   file_out << std::fixed << std::setprecision(16);
 
-  for (auto& sp : scatteringPoints) {
-    file_out << sp.cogli1(L);
-  }
+  for (size_t sp = 0; sp < cogli1MaxSpheres; sp++)
+    file_out << scatteringPoints[sp].cogli1(Lbox);
 
   file_out.close();
 }

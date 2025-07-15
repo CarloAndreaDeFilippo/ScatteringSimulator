@@ -15,6 +15,7 @@ void SimulationSettings::loadSettings(const std::string& scattFile) {
   // Read simulation parameters from json file
   nlohmann::json settings;
   file >> settings;
+  file.close();
 
   std::cout << settings << "\n";
 
@@ -104,5 +105,26 @@ void SimulationSettings::loadSettings(const std::string& scattFile) {
     std::exit(-1);
   }
 
-  file.close();
+  // Cogli1
+  if (settings.contains("saveCogli1")) {
+    saveCogli1 = settings["saveCogli1"];
+
+    std::cout << settings["cogli1Folder"] << "\n";
+
+    if (saveCogli1) {
+      try {
+        if (settings.contains("cogli1Folder")) {
+          cogli1Folder = settings["cogli1Folder"];
+
+          std::cout << cogli1Folder << "\n";
+
+          if (directoryExists(cogli1Folder) == false)
+            makeDirectory(cogli1Folder);
+        }
+      } catch (const std::exception& e) {
+        std::cout << "Error parsing JSON: cogli1Folder not provided" << "\n";
+        std::exit(-1);
+      }
+    }
+  }
 }
