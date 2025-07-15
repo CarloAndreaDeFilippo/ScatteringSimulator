@@ -20,7 +20,7 @@ class SimulationSettings {
   std::string configurationFolder;
   std::vector<std::string> configurationFiles;
 
-  std::string rho1DFolder = "Data/rho1D/";
+  std::string outputFolder = "Data/rho1D/";
 
   SimulationSettings() = default;
 

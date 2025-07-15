@@ -34,5 +34,6 @@
         }
     ],
     "rhoSP": 1.0,
-    "ConfigurationsFolder": "Configurations"
+    "ConfigurationsFolder": "Configurations/",
+    "OutputFolder": "Data/rho1D/"
 }

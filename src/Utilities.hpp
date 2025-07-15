@@ -27,6 +27,15 @@ inline std::vector<std::string> listFilesInDir(const std::string& path) {
 }
 
 //! Only Linux
+// Returns true if the path exists and is a directory
+inline bool directoryExists(const std::string& path) {
+  struct stat info;
+  if (stat(path.c_str(), &info) != 0)
+    return false;  // cannot access path
+  return (info.st_mode & S_IFDIR) != 0;
+}
+
+//! Only Linux
 // C++11 function to create a directory
 inline void makeDirectory(const std::string& path) {
   mkdir(path.c_str(), 0755);

@@ -3,6 +3,8 @@
 #include <fstream>
 #include <iostream>
 
+#include "Utilities.hpp"
+
 void SimulationSettings::loadSettings(const std::string& scattFile) {
   std::ifstream file(scattFile);
   if (!file.is_open()) {
@@ -81,6 +83,20 @@ void SimulationSettings::loadSettings(const std::string& scattFile) {
     if (settings.contains("ConfigurationsFolder")) {
       configurationFolder = settings["ConfigurationsFolder"];
       configurationFiles = listFilesInDir(configurationFolder);
+    }
+
+  } catch (const std::exception& e) {
+    std::cout << "Error parsing JSON: " << e.what() << "\n";
+    std::exit(-1);
+  }
+
+  // Output folder
+  try {
+    if (settings.contains("OutputFolder")) {
+      outputFolder = settings["OutputFolder"];
+
+      if (directoryExists(outputFolder) == false)
+        makeDirectory(outputFolder);
     }
 
   } catch (const std::exception& e) {

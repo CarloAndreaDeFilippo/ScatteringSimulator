@@ -35,9 +35,9 @@ void ScatteringSimulation::startSimulation() {
 
     // TODO: check for finite-size effects in dq
 
-    std::string outputFolder = simSettings.rho1DFolder + confNameNoExtension;
-    makeDirectory(simSettings.rho1DFolder);
-    makeDirectory(outputFolder);
+    std::string outputFolder = simSettings.outputFolder + confNameNoExtension;
+    if (directoryExists(outputFolder) == false)
+      makeDirectory(outputFolder);
 
     // Initialize Rho1d
     for (auto& scattVec : simSettings.scattVectors)
