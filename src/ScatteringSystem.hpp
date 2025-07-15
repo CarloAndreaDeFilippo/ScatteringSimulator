@@ -24,7 +24,7 @@ class ScatteringSystem {
   //! Placeholder for 2D scattering
   Rho2D rho2D;  // FT of microscopic density along the axis1/axis2 plane
 
-  size_t cogli1MaxSpheres = 100000;
+  size_t cogli2MaxSpheres = 100000;
 
   ScatteringSystem() = default;
   ScatteringSystem(ScattType sType) {
@@ -33,5 +33,5 @@ class ScatteringSystem {
 
   //* Functions
   void generateScatteringPoints(const std::vector<Particle>& particles);
-  void cogli1(const std::array<double, 3>& Lbox, const std::string filename, const bool append);
+  void cogli2(const std::array<double, 3>& Lbox, const std::string filename, const bool append);
 };

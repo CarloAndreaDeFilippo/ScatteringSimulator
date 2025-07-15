@@ -81,8 +81,8 @@ void SimulationSettings::loadSettings(const std::string& scattFile) {
 
   // Configurations folder and files
   try {
-    if (settings.contains("ConfigurationsFolder")) {
-      configurationFolder = settings["ConfigurationsFolder"];
+    if (settings.contains("configurationsFolder")) {
+      configurationFolder = settings["configurationsFolder"];
       configurationFiles = listFilesInDir(configurationFolder);
     }
 
@@ -93,8 +93,8 @@ void SimulationSettings::loadSettings(const std::string& scattFile) {
 
   // Output folder
   try {
-    if (settings.contains("OutputFolder")) {
-      outputFolder = settings["OutputFolder"];
+    if (settings.contains("outputFolder")) {
+      outputFolder = settings["outputFolder"];
 
       if (directoryExists(outputFolder) == false)
         makeDirectory(outputFolder);
@@ -106,23 +106,23 @@ void SimulationSettings::loadSettings(const std::string& scattFile) {
   }
 
   // Cogli1
-  if (settings.contains("saveCogli1")) {
-    saveCogli1 = settings["saveCogli1"];
+  if (settings.contains("saveCogli2")) {
+    saveCogli2 = settings["saveCogli2"];
 
-    std::cout << settings["cogli1Folder"] << "\n";
+    std::cout << settings["cogli2Folder"] << "\n";
 
-    if (saveCogli1) {
+    if (saveCogli2) {
       try {
-        if (settings.contains("cogli1Folder")) {
-          cogli1Folder = settings["cogli1Folder"];
+        if (settings.contains("cogli2Folder")) {
+          cogli2Folder = settings["cogli2Folder"];
 
-          std::cout << cogli1Folder << "\n";
+          std::cout << cogli2Folder << "\n";
 
-          if (directoryExists(cogli1Folder) == false)
-            makeDirectory(cogli1Folder);
+          if (directoryExists(cogli2Folder) == false)
+            makeDirectory(cogli2Folder);
         }
       } catch (const std::exception& e) {
-        std::cout << "Error parsing JSON: cogli1Folder not provided" << "\n";
+        std::cout << "Error parsing JSON: cogli2Folder not provided" << "\n";
         std::exit(-1);
       }
     }

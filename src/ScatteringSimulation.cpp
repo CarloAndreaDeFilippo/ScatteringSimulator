@@ -4,7 +4,7 @@
 #include <fstream>
 #include <iostream>
 
-#include "Cogli1.hpp"
+#include "Cogli2.hpp"
 #include "ScatteringSystem.hpp"
 
 void ScatteringSimulation::startSimulation() {
@@ -27,10 +27,10 @@ void ScatteringSimulation::startSimulation() {
 
     scattSys.generateScatteringPoints(partSys.particles);
 
-    if (simSettings.saveCogli1) {
-      std::string outputCogli1 = simSettings.cogli1Folder + confNameNoExtension + ".mgl";
-      Cogli1::box(partSys.Lbox, outputCogli1);
-      scattSys.cogli1(partSys.Lbox, outputCogli1, true);
+    if (simSettings.saveCogli2) {
+      std::string outputCogli2 = simSettings.cogli2Folder + confNameNoExtension + ".mgl";
+      cogli2::box(partSys.Lbox, outputCogli2);
+      scattSys.cogli2(partSys.Lbox, outputCogli2, true);
     }
 
     std::cout << "Number of scattering points: " << scattSys.NSP << "\n";

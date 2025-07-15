@@ -22,8 +22,8 @@ class SimulationSettings {
 
   std::string outputFolder = "Data/rho1D/";
 
-  bool saveCogli1 = false;
-  std::string cogli1Folder = "Cogli1/";
+  bool saveCogli2 = false;
+  std::string cogli2Folder = "Cogli2/";
 
   SimulationSettings() = default;
 

@@ -1,6 +1,6 @@
 #include "ScatteringPoint.hpp"
 
-std::string ScatteringPoint::cogli1(const std::array<double, 3>& Lbox) {
+std::string ScatteringPoint::cogli2(const std::array<double, 3>& Lbox) {
   double radius = 0.1;
   std::string color = "blue";
 

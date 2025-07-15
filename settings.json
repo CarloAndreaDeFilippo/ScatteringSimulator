@@ -34,8 +34,8 @@
         }
     ],
     "rhoSP": 1.0,
-    "ConfigurationsFolder": "Configurations/",
-    "OutputFolder": "Data/rho1D/",
-    "saveCogli1": true,
-    "cogli1Folder": "Cogli1/"
+    "configurationsFolder": "Configurations/",
+    "outputFolder": "Data/rho1D/",
+    "saveCogli2": true,
+    "cogli2Folder": "cogli2/"
 }

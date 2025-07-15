@@ -10,5 +10,5 @@ class ScatteringPoint {
  public:
   std::array<double, 3> cm = {{0., 0., 0.}};
 
-  std::string cogli1(const std::array<double, 3>& L);
+  std::string cogli2(const std::array<double, 3>& L);
 };
