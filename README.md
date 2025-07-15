@@ -8,7 +8,7 @@ Each particle in the system is represented by a random cloud of scattering point
 
 $$S(\vec{q}) = \left\langle \frac{1}{N} \rho_{\vec{q}} \rho_{-\vec{q}} \right\rangle$$
 
-where $N$ is the number of scattering points, $\langle ... \rangle$ is the average over different configurations, $\vec{q}$ is the scattering vector (i.e. the direction of the scattered wave), and $\rho_{\vec{q}}$ is the Fourier transform of the microscopic density:
+where $N$ is the number of scattering points, $\langle ... \rangle$ is the average over different configurations, $\vec{q}$ is the scattering vector, and $\rho_{\vec{q}}$ is the Fourier transform of the microscopic density:
 
 $$\rho_{\vec{q}} = \sum_i^N e^{- i \vec{q} \cdot \vec{r}_i}$$
 
@@ -28,6 +28,12 @@ To build:
 ```
 cd ScatteringSimulator
 make -j
+```
+
+To use once built:
+
+```
+./scatteringSimulator settings.json
 ```
 
 ## Documentation
@@ -102,16 +108,20 @@ $$\left|\frac{x}{s_a} \right|^r + \left|\frac{x}{s_b} \right|^s + \left|\frac{x}
 
 ### Simulation configuration file
 
-The second file, in the json format, contains all simulation-related information, such as the type of simulation and the mesh density of the scattering points. An example is provided (settings.json).
+The second file, in the JSON format, contains all simulation-related information, such as the type of simulation and the mesh density of the scattering points. An example  ```settings.json``` is provided.
 In particular, it is possible to choose:
 * ```simType``` (type of simulation): only ```1D``` at the moment
 * ```scattType``` (type of scattering): 
     * ```Sq``` for the structure factor: each particle is represented by a single scattering point in its center of mass
-    * ```Iq``` for the full scattering intensity: each particle is represented by a random mesh of scattering points. The number of scattering points depends by the particle volume and the density of points ```rhoSP```, which can be modified in the json file.
-* ```scattVectors``` (scattering vector data to be computed): it describes a series of directions (```direction``` in the json file), their ranges of $q$ values to compute (```qmin``` and ```qmax```), and the spacing between the $q$ values (```dq```). NB: a value of ```dq``` too little (in the order of $2\pi / L_{box}$) can lead to finite size effects.
+    * ```Iq``` for the full scattering intensity: each particle is represented by a random mesh of scattering points. The number of scattering points depends on the particle volume and the density of points ```rhoSP```, which can be modified in the JSON file.
+* ```scattVectors``` (scattering vector data to be computed): it describes a series of directions (```direction``` in the JSON file), their ranges of $q$ values to compute (```qmin``` and ```qmax```), and the spacing between the $q$ values (```dq```). Note: a ```dq``` value too small (on the order of $2\pi / L_{box}$) can lead to finite-size effects.
 * ```configurationFolder```: folder that contains all the configurations to analyze.
 * ```outputFolder```: folder that will contain the output data.
-* ```saveCogli2```: choose whether or not to save a visualization file compatible with [cogli2](https://sourceforge.net/projects/cogli1/), in which each scattering point is represented by a sphere.
+* ```saveCogli2```: choose whether to save a visualization file compatible with [cogli2](https://sourceforge.net/projects/cogli1/), where each scattering point is represented by a sphere.
     * ```cogli2Folder```: folder that will contain the cogli2 output files.
+
+### Output
+
+
 
 [^1]: ACS Nano 2022, 16, 2, 2558–2568, [https://doi.org/10.1021/acsnano.1c09208](https://doi.org/10.1021/acsnano.1c09208)
