@@ -122,6 +122,21 @@ In particular, it is possible to choose:
 
 ### Output
 
+For ```simType``` set to ```1D```, the program computes the scattering data along the specified axes and saves the results in the chosen output folder:
+```
+project
+│
+└───outputFolder
+│   └───confName0
+│       │   axis_0.txt
+│       │   axis_1.txt
+│       │   ...
+│   └───confName1
+│       │   axis_0.txt
+│       │   axis_1.txt
+│       │   ...
+```
+
 
 
 [^1]: ACS Nano 2022, 16, 2, 2558–2568, [https://doi.org/10.1021/acsnano.1c09208](https://doi.org/10.1021/acsnano.1c09208)
