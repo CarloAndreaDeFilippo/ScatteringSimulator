@@ -52,5 +52,8 @@ Molgl/
 #Configurations
 Configurations/
 
+#Output data files
+Data/
+
 ExampleConfigurations/
 ConfigurationsCreator/
