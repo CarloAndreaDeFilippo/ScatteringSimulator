@@ -17,7 +17,10 @@ void SimulationSettings::loadSettings(const std::string& scattFile) {
   file >> settings;
   file.close();
 
-  std::cout << settings << "\n";
+  // Print chosen settings
+  for (auto it = settings.begin(); it != settings.end(); ++it) {
+    std::cout << it.key() << ": " << it.value() << '\n';
+  }
 
   // Simulation type
   try {

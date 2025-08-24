@@ -8,19 +8,9 @@
                 0.0,
                 0.0
             ],
-            "qmin": 0.01,
-            "qmax": 5.0,
-            "dq": 0.01
-        },
-        {
-            "direction": [
-                0.0,
-                1.0,
-                0.0
-            ],
-            "qmin": 0.01,
-            "qmax": 3.0,
-            "dq": 0.01
+            "qmin": 0.0365301,
+            "qmax": 4.0,
+            "dq": 0.062531
         },
         {
             "direction": [
@@ -29,13 +19,13 @@
                 1.0
             ],
             "qmin": 0.0,
-            "qmax": 2.0,
-            "dq": 0.01
+            "qmax": 4.0,
+            "dq": 0.0365301
         }
     ],
-    "rhoSP": 1.0,
+    "rhoSP": 10.0,
     "configurationsFolder": "Configurations/",
     "outputFolder": "Data/rho1D/",
-    "saveCogli2": true,
+    "saveCogli2": false,
     "cogli2Folder": "cogli2/"
 }

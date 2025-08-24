@@ -5,13 +5,14 @@
 #include <iostream>
 
 #include "Cogli2.hpp"
+#include "ParticleSystem.hpp"
 #include "ScatteringSystem.hpp"
 
 void ScatteringSimulation::startSimulation() {
   std::cout << "#Total configurations: " << simSettings.configurationFiles.size() << "\n";
 
   // Loop over the configurations
-  for (auto& configuration : simSettings.configurationFiles) {
+  for (const auto& configuration : simSettings.configurationFiles) {
     std::string confName = configuration;
     std::cout << "Configuration " << confName << "\n";
 

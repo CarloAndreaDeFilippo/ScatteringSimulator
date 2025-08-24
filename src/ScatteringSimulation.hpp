@@ -2,11 +2,7 @@
 
 #include <string>
 
-#include "ParticleSystem.hpp"
-#include "ScatteringVector.hpp"
 #include "SimulationSettings.hpp"
-#include "Utilities.hpp"
-#include "nlohmann/json.hpp"
 
 class ScatteringSimulation {
  public:
