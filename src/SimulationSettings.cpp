@@ -52,25 +52,26 @@ void SimulationSettings::loadSettings(const std::string& scattFile) {
 
   // Scattering vectors
   try {
-    if (settings.contains("scattVectors")) {
-      for (const auto& vector : settings["scattVectors"]) {
-        ScatteringVector scattVec;
+    if (!settings.contains("scattVectors")) {
+      throw std::runtime_error("No scattering vectors provided");
+    }
+    for (const auto& vector : settings["scattVectors"]) {
+      ScatteringVector scattVec;
 
-        scattVec.qAxis = {vector.at("direction").at(0).get<double>(),
-                          vector.at("direction").at(1).get<double>(),
-                          vector.at("direction").at(2).get<double>()};
+      scattVec.qAxis = {vector.at("direction").at(0).get<double>(),
+                        vector.at("direction").at(1).get<double>(),
+                        vector.at("direction").at(2).get<double>()};
 
-        if (vector.contains("qmin"))
-          scattVec.qmin = vector.at("qmin").get<double>();
+      if (vector.contains("qmin"))
+        scattVec.qmin = vector.at("qmin").get<double>();
 
-        if (vector.contains("qmax"))
-          scattVec.qmax = vector.at("qmax").get<double>();
+      if (vector.contains("qmax"))
+        scattVec.qmax = vector.at("qmax").get<double>();
 
-        if (vector.contains("dq"))
-          scattVec.dq = vector.at("dq").get<double>();
+      if (vector.contains("dq"))
+        scattVec.dq = vector.at("dq").get<double>();
 
-        scattVectors.push_back(scattVec);
-      }
+      scattVectors.push_back(scattVec);
     }
 
   } catch (const std::exception& e) {
@@ -85,8 +86,14 @@ void SimulationSettings::loadSettings(const std::string& scattFile) {
   // Configurations folder and files
   try {
     if (settings.contains("configurationsFolder")) {
-      configurationFolder = settings["configurationsFolder"];
-      configurationFiles = listFilesInDir(configurationFolder);
+      throw std::runtime_error("No configurationsFolder provided");
+    }
+
+    configurationFolder = settings["configurationsFolder"];
+    configurationFiles = listFilesInDir(configurationFolder);
+
+    if (configurationFiles.size() == 0) {
+      throw std::runtime_error("No configuration files found in " + configurationFolder);
     }
 
   } catch (const std::exception& e) {
@@ -96,38 +103,35 @@ void SimulationSettings::loadSettings(const std::string& scattFile) {
 
   // Output folder
   try {
-    if (settings.contains("outputFolder")) {
-      outputFolder = settings["outputFolder"];
-
-      if (directoryExists(outputFolder) == false)
-        makeDirectory(outputFolder);
+    if (!settings.contains("outputFolder")) {
+      throw std::runtime_error("No outputFolder provided");
     }
+    outputFolder = settings["outputFolder"];
+
+    if (directoryExists(outputFolder) == false)
+      makeDirectory(outputFolder);
 
   } catch (const std::exception& e) {
     std::cout << "Error parsing JSON: " << e.what() << "\n";
     std::exit(-1);
   }
 
-  // Cogli1
-  if (settings.contains("saveCogli2")) {
-    saveCogli2 = settings["saveCogli2"];
+  // Cogli2 output
+  if (settings.contains("saveCogli2") && settings["saveCogli2"] == true) {
+    saveCogli2 = true;
 
-    std::cout << settings["cogli2Folder"] << "\n";
-
-    if (saveCogli2) {
-      try {
-        if (settings.contains("cogli2Folder")) {
-          cogli2Folder = settings["cogli2Folder"];
-
-          std::cout << cogli2Folder << "\n";
-
-          if (directoryExists(cogli2Folder) == false)
-            makeDirectory(cogli2Folder);
-        }
-      } catch (const std::exception& e) {
-        std::cout << "Error parsing JSON: cogli2Folder not provided" << "\n";
-        std::exit(-1);
+    try {
+      if (!settings.contains("cogli2Folder")) {
+        throw std::runtime_error("No cogli2Folder provided");
       }
+      cogli2Folder = settings["cogli2Folder"];
+
+      if (directoryExists(cogli2Folder) == false)
+        makeDirectory(cogli2Folder);
+
+    } catch (const std::exception& e) {
+      std::cout << "Error parsing JSON: cogli2Folder not provided" << "\n";
+      std::exit(-1);
     }
   }
 }
