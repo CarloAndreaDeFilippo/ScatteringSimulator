@@ -1,9 +1,8 @@
 #pragma once
 
+#include <array>
 #include <string>
 #include <vector>
-
-#include "ScatteringPoint.hpp"
 
 namespace cogli2 {
 
