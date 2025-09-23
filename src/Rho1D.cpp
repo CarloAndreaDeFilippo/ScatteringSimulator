@@ -12,7 +12,7 @@ void Rho1D::calculateRho(const std::vector<ScatteringPoint>& scatteringPoints) {
   if (printStep < 1) printStep = 1;
 
 #pragma omp parallel for
-  for (size_t qq = 0; qq < qVector.qqmax; qq++) {
+  for (size_t qq = 0; qq < qVector.qqmax; ++qq) {
     std::complex<double> sum = 0.;
 
     for (auto& sp : scatteringPoints) {
@@ -38,7 +38,7 @@ void Rho1D::exportData(const size_t NSP, const std::string& filename) {
     std::exit(-1);
   }
 
-  for (size_t qq = 0; qq < qVector.qqmax; qq++) {
+  for (size_t qq = 0; qq < qVector.qqmax; ++qq) {
     double q = qVector.qValues[qq];
 
     file_out << q << " " << std::norm(rho[qq]) / static_cast<double>(NSP) << "\n";

@@ -26,6 +26,7 @@ inline std::vector<std::string> listFilesInDir(const std::string& path) {
   return fileNames;
 }
 
+// TODO: add specific functions for Windows and MacOS
 //! Only Linux
 // Returns true if the path exists and is a directory
 inline bool directoryExists(const std::string& path) {

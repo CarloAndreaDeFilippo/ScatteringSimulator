@@ -51,14 +51,14 @@ void ScatteringSimulation::startSimulation() {
     for (auto& scattVec : simSettings.scattVectors)
       scattSys.vecRho1D.emplace_back(scattVec);
 
-    for (size_t vec = 0; vec < scattSys.vecRho1D.size(); vec++) {
+    for (size_t vec = 0; vec < scattSys.vecRho1D.size(); ++vec) {
       auto& rho1d = scattSys.vecRho1D[vec];
 
       rho1d.qVector.qqmax = static_cast<int>((rho1d.qVector.qmax - rho1d.qVector.qmin) / rho1d.qVector.dq);
 
       rho1d.qVector.qValues.reserve(rho1d.qVector.qqmax);
 
-      for (size_t qq = 0; qq < rho1d.qVector.qqmax; qq++) {
+      for (size_t qq = 0; qq < rho1d.qVector.qqmax; ++qq) {
         double q = rho1d.qVector.qmin + qq * rho1d.qVector.dq;
 
         rho1d.qVector.qValues.push_back(q);

@@ -24,26 +24,24 @@ void SimulationSettings::loadSettings(const std::string& scattFile) {
 
   // Simulation type
   try {
-    std::string typeStr = settings.at("simType");
-    if (typeStr == "1D") {
+    if (settings.at("simType") == "1D") {
       simType = SimType::OneDim;
     } else {
-      throw std::runtime_error("Unknown simType: " + typeStr);
+      throw std::runtime_error("Unknown simType: " + settings.at("simType"));
     }
   } catch (const std::exception& e) {
     std::cout << "Error parsing JSON: " << e.what() << "\n";
     std::exit(-1);
   }
 
-  // Scattering type
+  // Scattering type (Sq or Iq)
   try {
-    std::string typeStr = settings.at("scattType");
-    if (typeStr == "Sq") {
+    if (settings.at("scattType") == "Sq") {
       scattType = ScattType::Sq;
-    } else if (typeStr == "Iq") {
+    } else if (settings.at("scattType") == "Iq") {
       scattType = ScattType::Iq;
     } else {
-      throw std::runtime_error("Unknown scattType: " + typeStr);
+      throw std::runtime_error("Unknown scattType: " + settings.at("scattType"));
     }
   } catch (const std::exception& e) {
     std::cout << "Error parsing JSON: " << e.what() << "\n";
@@ -108,7 +106,7 @@ void SimulationSettings::loadSettings(const std::string& scattFile) {
     }
     outputFolder = settings["outputFolder"];
 
-    if (directoryExists(outputFolder) == false)
+    if (!directoryExists(outputFolder))
       makeDirectory(outputFolder);
 
   } catch (const std::exception& e) {
