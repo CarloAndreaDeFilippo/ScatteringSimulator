@@ -24,10 +24,11 @@ void SimulationSettings::loadSettings(const std::string& scattFile) {
 
   // Simulation type
   try {
-    if (settings.at("simType") == "1D") {
+    std::string parseSimType = settings.at("simType");
+    if (parseSimType == "1D") {
       simType = SimType::OneDim;
     } else {
-      throw std::runtime_error("Unknown simType: " + settings.at("simType"));
+      throw std::runtime_error("Unknown simType: " + parseSimType);
     }
   } catch (const std::exception& e) {
     std::cout << "Error parsing JSON: " << e.what() << "\n";
@@ -36,12 +37,13 @@ void SimulationSettings::loadSettings(const std::string& scattFile) {
 
   // Scattering type (Sq or Iq)
   try {
-    if (settings.at("scattType") == "Sq") {
+    std::string parseScattType = settings.at("scattType");
+    if (parseScattType == "Sq") {
       scattType = ScattType::Sq;
-    } else if (settings.at("scattType") == "Iq") {
+    } else if (parseScattType == "Iq") {
       scattType = ScattType::Iq;
     } else {
-      throw std::runtime_error("Unknown scattType: " + settings.at("scattType"));
+      throw std::runtime_error("Unknown scattType: " + parseScattType);
     }
   } catch (const std::exception& e) {
     std::cout << "Error parsing JSON: " << e.what() << "\n";
@@ -83,7 +85,7 @@ void SimulationSettings::loadSettings(const std::string& scattFile) {
 
   // Configurations folder and files
   try {
-    if (settings.contains("configurationsFolder")) {
+    if (!settings.contains("configurationsFolder")) {
       throw std::runtime_error("No configurationsFolder provided");
     }
 
