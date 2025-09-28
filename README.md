@@ -65,7 +65,7 @@ where
 
 The `docs` folder contains an example configuration with all available particle types:
 
-![Available particle shapes](/docs/particleShapesExample.png)
+<img src="/docs/particleShapesExample.png" width=50% height=50%>
 
 Below are the shape names and their attributes for all available shapes.
 
@@ -137,6 +137,6 @@ project
 │       │   ...
 ```
 
-
+The averageScatt1D.py script processes data from different configurations, calculates axis-wise averages, writes the averaged datasets into files in the data folder, and creates a plot of the results for all axes.
 
 [^1]: ACS Nano 2022, 16, 2, 2558–2568, [https://doi.org/10.1021/acsnano.1c09208](https://doi.org/10.1021/acsnano.1c09208)
