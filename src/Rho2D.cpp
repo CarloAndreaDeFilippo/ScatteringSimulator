@@ -5,22 +5,6 @@
 
 #include "ProgressBar.hpp"
 
-/*
-void Rho2D::loadQ(const std::string infile) {
-  std::ifstream file_in(infile);
-
-  if (file_in.is_open() == false) {
-    std::cout << "Error opening " << infile << "\n";
-    std::exit(-1);
-  }
-
-  file_in >> qmax[0] >> qmax[1] >> qmax[2];
-  file_in >> dq[0] >> dq[1] >> dq[2];
-  file_in >> axis1 >> axis2;
-
-  for (int ax = 0; ax < 3; ax++) qqmax[ax] = qmax[ax] / dq[ax];
-}*/
-
 void Rho2D::initialize(const std::array<double, 3> dQ, const std::array<double, 3> Qmin, const std::array<size_t, 3> QQmax) {
   dq = dQ;
   qmin = Qmin;
