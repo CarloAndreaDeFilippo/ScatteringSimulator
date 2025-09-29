@@ -23,7 +23,6 @@ void Rho1D::calculateRho(const std::vector<ScatteringPoint>& scatteringPoints) {
 
     if (qq % printStep == 0) {
       pbar.setProgress(100. * qq / static_cast<double>(qVector.qqmax));
-
       pbar.update();
     }
   }
