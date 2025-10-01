@@ -13,5 +13,6 @@ class ScatteringVector {
   std::array<double, 3> qAxis = {1., 0., 0.};  // Direction of the q vector
   std::vector<double> qValues;                 // Vector of q values
 
-  // TODO: add normalization check for qAxis (and check if not 0)
+  // ? add normalization check for qAxis (and check if not 0)
+  // Did the check on input parsing from setting file
 };

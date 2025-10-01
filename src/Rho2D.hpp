@@ -21,6 +21,14 @@ class Rho2D {
 
   Rho2D(const ScatteringPlane& scattPlane) {
     qPlane = scattPlane;
+    pos_pos.resize(qPlane.q1Vector.qqmax);
+    pos_neg.resize(qPlane.q1Vector.qqmax);
+
+    for (auto& rho : pos_pos)
+      rho.resize(qPlane.q2Vector.qqmax, 0.);
+
+    for (auto& rho : pos_neg)
+      rho.resize(qPlane.q2Vector.qqmax, 0.);
   }
 
   std::array<double, 3> qmin = {{0., 0., 0.}};  // Minimum value of q components
@@ -33,11 +41,6 @@ class Rho2D {
   std::vector<std::vector<std::complex<double>>> neg_pos;  // q = (-qx, +qy)
   std::vector<std::vector<std::complex<double>>> neg_neg;  // q = (-qx, -qy)
 
-  // void loadQ(const std::string infile);
-  void initialize(const std::array<double, 3> dQ, const std::array<double, 3> Qmin, const std::array<size_t, 3> QQmax);
-  // void setQ(const std::array<double, 3> Qmax, const std::array<double, 3> dQ);
-  // void calculateRange(const size_t sp_in, const size_t sp_fin, const std::vector<ScatteringPoint>& scatteringPoints);
-  // void calculateThreads(const std::vector<ScatteringPoint>& scatteringPoints, const int Nthreads);
   void calculateConjugates();
   void exportData(size_t NSP, std::string filename);
 };

@@ -4,11 +4,12 @@
 #include <iostream>
 
 #include "Utilities.hpp"
+#include "mathTools.hpp"
 
-void SimulationSettings::loadSettings(const std::string& scattFile) {
-  std::ifstream file(scattFile);
+void SimulationSettings::loadSettings(const std::string& settingsFile) {
+  std::ifstream file(settingsFile);
   if (!file.is_open()) {
-    std::cout << "Error opening " << scattFile << "\n";
+    std::cout << "Error opening " << settingsFile << "\n";
     std::exit(-1);
   }
 
@@ -62,6 +63,9 @@ void SimulationSettings::loadSettings(const std::string& scattFile) {
                         vector.at("direction").at(1).get<double>(),
                         vector.at("direction").at(2).get<double>()};
 
+      // Normalization of the scattering vector
+      normalizeVector(scattVec.qAxis);
+
       if (vector.contains("qmin"))
         scattVec.qmin = vector.at("qmin").get<double>();
 
@@ -70,6 +74,16 @@ void SimulationSettings::loadSettings(const std::string& scattFile) {
 
       if (vector.contains("dq"))
         scattVec.dq = vector.at("dq").get<double>();
+
+      scattVec.qqmax = static_cast<int>((scattVec.qmax - scattVec.qmin) / scattVec.dq);
+
+      scattVec.qValues.reserve(scattVec.qqmax);
+
+      for (size_t qq = 0; qq < scattVec.qqmax; ++qq) {
+        double q = scattVec.qmin + qq * scattVec.dq;
+
+        scattVec.qValues.push_back(q);
+      }
 
       scattVectors.push_back(scattVec);
     }
