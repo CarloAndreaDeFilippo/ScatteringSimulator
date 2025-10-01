@@ -5,6 +5,7 @@
 void Rho1D::calculateRho(const std::vector<ScatteringPoint>& scatteringPoints) {
   std::complex<double> im(0.0, 1.0);  // definition of i
 
+  //? Fix or remove the progressbar?
   ProgressBar pbar;
 
   int printStep = static_cast<double>(qVector.qqmax) / 100.;
@@ -14,9 +15,10 @@ void Rho1D::calculateRho(const std::vector<ScatteringPoint>& scatteringPoints) {
 #pragma omp parallel for
   for (size_t qq = 0; qq < qVector.qqmax; ++qq) {
     std::complex<double> sum = 0.;
+    double qModule = qVector.qValues[qq];
 
     for (auto& sp : scatteringPoints) {
-      sum += std::exp(-im * dotProduct(qVector.qAxis, sp.cm) * qVector.qValues[qq]);
+      sum += std::exp(-im * dotProduct(qVector.qAxis, sp.cm) * qModule);
     }
 
     rho[qq] += sum;

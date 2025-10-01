@@ -19,6 +19,7 @@ class Rho1D {
 
   Rho1D(const ScatteringVector& scattVec) {
     qVector = scattVec;
+    rho.resize(qVector.qqmax, 0.);
   }
 
   void calculateRho(const std::vector<ScatteringPoint>& scatteringPoints);

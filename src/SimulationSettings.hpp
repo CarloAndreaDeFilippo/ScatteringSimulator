@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 
+#include "ScatteringPlane.hpp"
 #include "ScatteringTypes.hpp"
 #include "ScatteringVector.hpp"
 #include "SimulationTypes.hpp"
@@ -15,6 +16,7 @@ class SimulationSettings {
   ScattType scattType = ScattType::Sq;
 
   std::vector<ScatteringVector> scattVectors;
+  std::vector<ScatteringPlane> scattPlanes;
   double rhoSP;
 
   std::string configurationFolder;
@@ -27,9 +29,9 @@ class SimulationSettings {
 
   SimulationSettings() = default;
 
-  SimulationSettings(const std::string& scattFile) {
-    loadSettings(scattFile);
+  SimulationSettings(const std::string& settingsFile) {
+    loadSettings(settingsFile);
   }
 
-  void loadSettings(const std::string& scattFile);
+  void loadSettings(const std::string& settingsFile);
 };
