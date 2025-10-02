@@ -110,7 +110,6 @@ $$\left|\frac{x}{s_a} \right|^r + \left|\frac{x}{s_b} \right|^s + \left|\frac{x}
 
 The second file, in the JSON format, contains all simulation-related information, such as the type of simulation and the mesh density of the scattering points. An example  ```settings.json``` is provided.
 In particular, it is possible to choose:
-* ```simType``` (type of simulation): only ```1D``` at the moment
 * ```scattType``` (type of scattering): 
     * ```Sq``` for the structure factor: each particle is represented by a single scattering point in its center of mass
     * ```Iq``` for the full scattering intensity: each particle is represented by a random mesh of scattering points. The number of scattering points depends on the particle volume and the density of points ```rhoSP```, which can be modified in the JSON file.

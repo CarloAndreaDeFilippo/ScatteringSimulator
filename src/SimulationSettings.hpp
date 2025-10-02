@@ -6,13 +6,11 @@
 #include "ScatteringPlane.hpp"
 #include "ScatteringTypes.hpp"
 #include "ScatteringVector.hpp"
-#include "SimulationTypes.hpp"
 #include "Utilities.hpp"
 #include "nlohmann/json.hpp"
 
 class SimulationSettings {
  public:
-  SimType simType = SimType::OneDim;
   ScattType scattType = ScattType::Sq;
 
   std::vector<ScatteringVector> scattVectors;
