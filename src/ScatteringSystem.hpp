@@ -18,9 +18,7 @@ class ScatteringSystem {
   ScattType scattType = ScattType::Sq;
 
   std::vector<Rho1D> vecRho1D;
-
-  //! Placeholder for 2D scattering
-  Rho2D rho2D;  // FT of microscopic density along the axis1/axis2 plane
+  std::vector<Rho2D> vecRho2D;
 
   size_t cogli2MaxSpheres = 100000;
 
