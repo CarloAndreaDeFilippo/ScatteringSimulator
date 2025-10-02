@@ -23,19 +23,6 @@ void SimulationSettings::loadSettings(const std::string& settingsFile) {
     std::cout << it.key() << ": " << it.value() << '\n';
   }
 
-  // Simulation type
-  try {
-    std::string parseSimType = settings.at("simType");
-    if (parseSimType == "1D") {
-      simType = SimType::OneDim;
-    } else {
-      throw std::runtime_error("Unknown simType: " + parseSimType);
-    }
-  } catch (const std::exception& e) {
-    std::cout << "Error parsing JSON: " << e.what() << "\n";
-    std::exit(-1);
-  }
-
   // Scattering type (Sq or Iq)
   try {
     std::string parseScattType = settings.at("scattType");

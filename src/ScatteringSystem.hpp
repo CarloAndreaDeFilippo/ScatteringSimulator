@@ -8,7 +8,6 @@
 #include "Rho2D.hpp"
 #include "ScatteringPoint.hpp"
 #include "ScatteringTypes.hpp"
-#include "SimulationTypes.hpp"
 
 class ScatteringSystem {
  public:
@@ -16,7 +15,6 @@ class ScatteringSystem {
   size_t NSP = 0;                                 // Number of scattering points
   std::vector<ScatteringPoint> scatteringPoints;  // Total ensemble of scattering points
 
-  SimType simType = SimType::OneDim;
   ScattType scattType = ScattType::Sq;
 
   std::vector<Rho1D> vecRho1D;
