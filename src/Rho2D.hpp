@@ -31,16 +31,6 @@ class Rho2D {
       rho.resize(qPlane.q2Vector.qqmax, 0.);
   }
 
-  std::array<double, 3> qmin = {{0., 0., 0.}};  // Minimum value of q components
-  std::array<double, 3> dq = {{0.01, 0.01, 0.01}};
-  std::array<size_t, 3> qqmax = {{100, 100, 100}};  // Maximum q index for matrices
-
-  int axis1 = 0;
-  int axis2 = 1;
-
-  std::vector<std::vector<std::complex<double>>> neg_pos;  // q = (-qx, +qy)
-  std::vector<std::vector<std::complex<double>>> neg_neg;  // q = (-qx, -qy)
-
-  void calculateConjugates();
-  void exportData(size_t NSP, std::string filename);
+  void calculateRho(const std::vector<ScatteringPoint>& scatteringPoints);
+  void exportData(const size_t NSP, const std::string& filename);
 };

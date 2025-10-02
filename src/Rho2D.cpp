@@ -4,16 +4,48 @@
 #include <thread>
 
 #include "ProgressBar.hpp"
+#include "mathTools.hpp"
 
-void Rho2D::calculateConjugates() {
-  for (size_t qq1 = 0; qq1 < qqmax[axis1]; qq1++)
-    for (size_t qq2 = 0; qq2 < qqmax[axis2]; qq2++) {
-      neg_neg[qq1][qq2] = std::conj(pos_pos[qq1][qq2]);
-      neg_pos[qq1][qq2] = std::conj(pos_neg[qq1][qq2]);
+void Rho2D::calculateRho(const std::vector<ScatteringPoint>& scatteringPoints) {
+  std::complex<double> im(0.0, 1.0);  // definition of i
+
+  auto& q1Vec = qPlane.q1Vector;
+  auto& q2Vec = qPlane.q2Vector;
+
+  //? Fix or remove the progressbar?
+  ProgressBar pbar;
+
+  int printStep = static_cast<double>(q1Vec.qqmax) / 100.;
+
+  if (printStep < 1) printStep = 1;
+
+#pragma omp parallel for
+  for (size_t qq1 = 0; qq1 < q1Vec.qqmax; ++qq1) {
+    double q1Module = q1Vec.qValues[qq1];
+    for (size_t qq2 = 0; qq2 < q2Vec.qqmax; ++qq2) {
+      std::complex<double> sumPosPos = 0.;
+      std::complex<double> sumPosNeg = 0.;
+      double q2Module = q2Vec.qValues[qq2];
+
+      for (auto& sp : scatteringPoints) {
+        double projection1 = dotProduct(q1Vec.qAxis, sp.cm) * q1Module;
+        double projection2 = dotProduct(q2Vec.qAxis, sp.cm) * q2Module;
+        sumPosPos += std::exp(-im * (projection1 + projection2));
+        sumPosNeg += std::exp(-im * (projection1 - projection2));
+      }
+
+      pos_pos[qq1][qq2] += sumPosPos;
+      pos_neg[qq1][qq2] += sumPosNeg;
     }
+
+    if (qq1 % printStep == 0) {
+      pbar.setProgress(100. * qq1 / static_cast<double>(q1Vec.qqmax));
+      pbar.update();
+    }
+  }
 }
 
-void Rho2D::exportData(size_t NSP, std::string filename) {
+void Rho2D::exportData(const size_t NSP, const std::string& filename) {
   std::ofstream file_out;
   file_out.open(filename);
 
@@ -22,61 +54,65 @@ void Rho2D::exportData(size_t NSP, std::string filename) {
     std::exit(-1);
   }
 
-  // pos_pos
-  for (size_t qq1 = 0; qq1 < qqmax[axis1]; qq1++) {
-    double q1 = qmin[axis1] + dq[axis1] * qq1;
+  auto& q1Vec = qPlane.q1Vector;
+  auto& q2Vec = qPlane.q2Vector;
 
-    for (size_t qq2 = 0; qq2 < qqmax[axis2]; qq2++) {
-      double q2 = qmin[axis2] + dq[axis2] * qq2;
+  // pos_pos (+q1, +q2)
+  for (size_t qq1 = 0; qq1 < q1Vec.qqmax; qq1++) {
+    double q1 = q1Vec.qValues[qq1];
 
-      file_out << q1 << " " << q2 << " " << std::norm(pos_pos[qq1][qq2]) / ((double)NSP) << "\n";
+    for (size_t qq2 = 0; qq2 < q2Vec.qqmax; qq2++) {
+      double q2 = q2Vec.qValues[qq2];
+
+      file_out << q1 << " " << q2 << " "
+               << std::norm(pos_pos[qq1][qq2]) / static_cast<double>(NSP) << "\n";
     }
 
     file_out << "\n";
   }
 
-  // pos_neg
-  for (size_t qq1 = 0; qq1 < qqmax[axis1]; qq1++) {
-    double q1 = dq[axis1] * qq1;
+  // pos_neg (+q1, -q2)
+  for (size_t qq1 = 0; qq1 < q1Vec.qqmax; qq1++) {
+    double q1 = q1Vec.qValues[qq1];
 
-    for (size_t qq2 = 0; qq2 < qqmax[axis2]; qq2++) {
-      double q2 = -dq[axis2] * qq2;
+    for (size_t qq2 = 0; qq2 < q2Vec.qqmax; qq2++) {
+      double q2 = -q2Vec.qValues[qq2];
 
       file_out << q1 << " " << q2 << " "
                << std::norm(pos_neg[qq1][qq2]) /
-                      ((double)NSP)
+                      static_cast<double>(NSP)
                << "\n";
     }
 
     file_out << "\n";
   }
 
-  // neg_pos
-  for (size_t qq1 = 0; qq1 < qqmax[axis1]; qq1++) {
-    double q1 = -dq[axis1] * qq1;
+  // neg_pos (-q1, +q2)
+  for (size_t qq1 = 0; qq1 < q1Vec.qqmax; qq1++) {
+    double q1 = -q1Vec.qValues[qq1];
 
-    for (size_t qq2 = 0; qq2 < qqmax[axis2]; qq2++) {
-      double q2 = dq[axis2] * qq2;
+    for (size_t qq2 = 0; qq2 < q2Vec.qqmax; qq2++) {
+      double q2 = q2Vec.qValues[qq2];
 
       file_out << q1 << " " << q2 << " "
-               << std::norm(neg_pos[qq1][qq2]) /
-                      ((double)NSP)
+               << std::norm(std::conj(pos_neg[qq1][qq2])) /
+                      static_cast<double>(NSP)
                << "\n";
     }
 
     file_out << "\n";
   }
 
-  // neg_neg
-  for (size_t qq1 = 0; qq1 < qqmax[axis1]; qq1++) {
-    double q1 = -dq[axis1] * qq1;
+  // neg_neg (-q2, -q2)
+  for (size_t qq1 = 0; qq1 < q1Vec.qqmax; qq1++) {
+    double q1 = -q1Vec.qValues[qq1];
 
-    for (size_t qq2 = 0; qq2 < qqmax[axis2]; qq2++) {
-      double q2 = -dq[axis2] * qq2;
+    for (size_t qq2 = 0; qq2 < q2Vec.qqmax; qq2++) {
+      double q2 = -q2Vec.qValues[qq2];
 
       file_out << q1 << " " << q2 << " "
-               << std::norm(neg_neg[qq1][qq2]) /
-                      ((double)NSP)
+               << std::norm(std::conj(pos_pos[qq1][qq2])) /
+                      static_cast<double>(NSP)
                << "\n";
     }
 
