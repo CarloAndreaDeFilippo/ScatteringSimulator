@@ -22,9 +22,33 @@
             "dq": 0.0365301
         }
     ],
+    "scattPlanes": [
+        {
+            "q1Vector": {
+                "direction": [
+                    1.0,
+                    0.0,
+                    0.0
+                ],
+                "qmin": 0.0,
+                "qmax": 4.0,
+                "dq": 0.062531
+            },
+            "q2Vector": {
+                "direction": [
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "qmin": 0.0,
+                "qmax": 4.0,
+                "dq": 0.0365301
+            }
+        }
+    ],
     "rhoSP": 10.0,
     "configurationsFolder": "Configurations/",
-    "outputFolder": "Data/rho1D/",
+    "outputFolder": "Data/",
     "saveCogli2": false,
     "cogli2Folder": "cogli2/"
 }

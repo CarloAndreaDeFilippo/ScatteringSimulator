@@ -7,7 +7,7 @@
 #include "ProgressBar.hpp"
 
 void ScatteringSystem::generateScatteringPoints(const std::vector<Particle>& particles) {
-  for (auto& part : particles) {
+  for (const auto& part : particles) {
     if (scattType == ScattType::Sq) {  // Calculate S(q)
       ScatteringPoint sp;
       sp.cm = part.tf.cm;

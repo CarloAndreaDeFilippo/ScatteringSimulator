@@ -34,30 +34,50 @@ void ScatteringSimulation::startSimulation() {
       scattSys.cogli2(partSys.Lbox, outputCogli2, true);
     }
 
-    std::cout << "Number of scattering points: " << scattSys.NSP << "\n";
-
-    //! Only 1D sim for the moment
+    // std::cout << "Number of scattering points: " << scattSys.NSP << "\n";
 
     // TODO: logscale support
-    // TODO: 2D planes
 
     // TODO: check for finite-size effects in dq
 
-    std::string outputFolder = simSettings.outputFolder + confNameNoExtension;
-    if (directoryExists(outputFolder) == false)
-      makeDirectory(outputFolder);
+    std::string rho1DFolderConfig = simSettings.outputFolderRho1D + confNameNoExtension + "/";
+    std::string rho2DFolderConfig = simSettings.outputFolderRho2D + confNameNoExtension + "/";
 
-    // Initialize Rho1d
+    // Make subfolders for output data
+    if (simSettings.scattVectors.size() > 0) {
+      if (!directoryExists(rho1DFolderConfig))
+        makeDirectory(rho1DFolderConfig);
+    }
+
+    if (simSettings.scattPlanes.size() > 0) {
+      if (!directoryExists(rho2DFolderConfig))
+        makeDirectory(rho2DFolderConfig);
+    }
+
+    // Initialize Rho1D
     for (auto& scattVec : simSettings.scattVectors)
       scattSys.vecRho1D.emplace_back(scattVec);
+
+    // Initialize Rho2D
+    for (auto& scattPlane : simSettings.scattPlanes)
+      scattSys.vecRho2D.emplace_back(scattPlane);
 
     for (size_t vec = 0; vec < scattSys.vecRho1D.size(); ++vec) {
       auto& rho1d = scattSys.vecRho1D[vec];
 
       rho1d.calculateRho(scattSys.scatteringPoints);
 
-      std::string outFile = outputFolder + "/axis_" + std::to_string(vec) + ".txt";
+      std::string outFile = rho1DFolderConfig + "axis_" + std::to_string(vec) + ".txt";
       rho1d.exportData(scattSys.NSP, outFile);
+    }
+
+    for (size_t pl = 0; pl < scattSys.vecRho2D.size(); ++pl) {
+      auto& rho2d = scattSys.vecRho2D[pl];
+
+      rho2d.calculateRho(scattSys.scatteringPoints);
+
+      std::string outFile = rho2DFolderConfig + "plane_" + std::to_string(pl) + ".txt";
+      rho2d.exportData(scattSys.NSP, outFile);
     }
   }
 }

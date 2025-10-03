@@ -4,6 +4,7 @@
 #include <sys/stat.h>
 
 #include <iostream>
+#include <sstream>
 
 // C++11 function to get file names inside a folder
 inline std::vector<std::string> listFilesInDir(const std::string& path) {
@@ -26,7 +27,7 @@ inline std::vector<std::string> listFilesInDir(const std::string& path) {
   return fileNames;
 }
 
-// TODO: add specific functions for Windows and MacOS
+// TODO: add specific functions for Windows and MacOS (or switch to newer C++...)
 //! Only Linux
 // Returns true if the path exists and is a directory
 inline bool directoryExists(const std::string& path) {
@@ -40,4 +41,26 @@ inline bool directoryExists(const std::string& path) {
 // C++11 function to create a directory
 inline void makeDirectory(const std::string& path) {
   mkdir(path.c_str(), 0755);
+}
+
+//! Only Linux
+// C++11 function to make recursive directories
+inline void makeDirectoryRecursive(const std::string& path) {
+  std::istringstream iss(path);
+  std::string partial;
+  std::string token;
+
+  while (std::getline(iss, token, '/')) {
+    if (token.empty()) continue;  // skip empty (handles leading '/')
+    if (!partial.empty()) partial += "/";
+    partial += token;
+
+    if (mkdir(partial.c_str(), 0755) != 0) {
+      if (errno == EEXIST) {
+        continue;  // already exists, fine
+      } else {
+        throw std::runtime_error("mkdir failed for " + partial);
+      }
+    }
+  }
 }

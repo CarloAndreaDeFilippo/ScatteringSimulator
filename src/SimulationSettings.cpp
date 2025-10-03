@@ -38,46 +38,20 @@ void SimulationSettings::loadSettings(const std::string& settingsFile) {
     std::exit(-1);
   }
 
-  // Scattering vectors
-  try {
-    if (!settings.contains("scattVectors")) {
-      throw std::runtime_error("No scattering vectors provided");
-    }
-    for (const auto& vector : settings["scattVectors"]) {
-      ScatteringVector scattVec;
-
-      scattVec.qAxis = {vector.at("direction").at(0).get<double>(),
-                        vector.at("direction").at(1).get<double>(),
-                        vector.at("direction").at(2).get<double>()};
-
-      // Normalization of the scattering vector
-      normalizeVector(scattVec.qAxis);
-
-      if (vector.contains("qmin"))
-        scattVec.qmin = vector.at("qmin").get<double>();
-
-      if (vector.contains("qmax"))
-        scattVec.qmax = vector.at("qmax").get<double>();
-
-      if (vector.contains("dq"))
-        scattVec.dq = vector.at("dq").get<double>();
-
-      scattVec.qqmax = static_cast<int>((scattVec.qmax - scattVec.qmin) / scattVec.dq);
-
-      scattVec.qValues.reserve(scattVec.qqmax);
-
-      for (size_t qq = 0; qq < scattVec.qqmax; ++qq) {
-        double q = scattVec.qmin + qq * scattVec.dq;
-
-        scattVec.qValues.push_back(q);
-      }
-
-      scattVectors.push_back(scattVec);
-    }
-
-  } catch (const std::exception& e) {
-    std::cout << "Error parsing JSON: " << e.what() << "\n";
+  // Check if no ScatteringVector or ScatteringPlane is defined
+  if (!settings.contains("scattVectors") && !settings.contains("scattPlanes")) {
+    std::cout << "No scattering vectors or planes provided";
     std::exit(-1);
+  }
+
+  // Scattering vectors (1D rho calculation)
+  for (const auto& vector : settings["scattVectors"]) {
+    scattVectors.emplace_back(vector);
+  }
+
+  // Scattering planes (2D rho calculation)
+  for (const auto& plane : settings["scattPlanes"]) {
+    scattPlanes.emplace_back(plane);
   }
 
   // Mesh density
@@ -102,20 +76,28 @@ void SimulationSettings::loadSettings(const std::string& settingsFile) {
     std::exit(-1);
   }
 
-  // Output folder
-  try {
-    if (!settings.contains("outputFolder")) {
-      throw std::runtime_error("No outputFolder provided");
-    }
+  // Output folders
+
+  if (settings.contains("outputFolder")) {
     outputFolder = settings["outputFolder"];
-
-    if (!directoryExists(outputFolder))
-      makeDirectory(outputFolder);
-
-  } catch (const std::exception& e) {
-    std::cout << "Error parsing JSON: " << e.what() << "\n";
-    std::exit(-1);
   }
+
+  /*
+  if (!directoryExists(outputFolder))
+    makeDirectory(outputFolder);
+
+  if (settings.contains("scattVectors")) {
+    outputFolderRho1D = outputFolder + "rho1D/";
+    if (!directoryExists(outputFolderRho1D))
+      makeDirectory(outputFolderRho1D);
+  }
+
+  if (settings.contains("scattPlanes")) {
+    outputFolderRho2D = outputFolder + "rho2D/";
+    if (!directoryExists(outputFolderRho2D))
+      makeDirectory(outputFolderRho2D);
+  }
+  */
 
   // Cogli2 output
   if (settings.contains("saveCogli2") && settings["saveCogli2"] == true) {
