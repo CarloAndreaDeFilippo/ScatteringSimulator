@@ -82,39 +82,28 @@ void SimulationSettings::loadSettings(const std::string& settingsFile) {
     outputFolder = settings["outputFolder"];
   }
 
-  /*
   if (!directoryExists(outputFolder))
-    makeDirectory(outputFolder);
+    makeDirectoryRecursive(outputFolder);
 
   if (settings.contains("scattVectors")) {
     outputFolderRho1D = outputFolder + "rho1D/";
     if (!directoryExists(outputFolderRho1D))
-      makeDirectory(outputFolderRho1D);
+      makeDirectoryRecursive(outputFolderRho1D);
   }
 
   if (settings.contains("scattPlanes")) {
     outputFolderRho2D = outputFolder + "rho2D/";
     if (!directoryExists(outputFolderRho2D))
-      makeDirectory(outputFolderRho2D);
+      makeDirectoryRecursive(outputFolderRho2D);
   }
-  */
 
   // Cogli2 output
-  if (settings.contains("saveCogli2") && settings["saveCogli2"] == true) {
+  if (settings.contains("saveCogli2") && settings["saveCogli2"].get<bool>() == true) {
     saveCogli2 = true;
 
-    try {
-      if (!settings.contains("cogli2Folder")) {
-        throw std::runtime_error("No cogli2Folder provided");
-      }
-      cogli2Folder = settings["cogli2Folder"];
+    if (settings.contains("cogli2Folder")) cogli2Folder = settings["cogli2Folder"];
 
-      if (directoryExists(cogli2Folder) == false)
-        makeDirectory(cogli2Folder);
-
-    } catch (const std::exception& e) {
-      std::cout << "Error parsing JSON: cogli2Folder not provided" << "\n";
-      std::exit(-1);
-    }
+    if (!directoryExists(cogli2Folder))
+      makeDirectoryRecursive(cogli2Folder);
   }
 }
