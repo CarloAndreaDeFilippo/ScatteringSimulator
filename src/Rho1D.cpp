@@ -6,11 +6,12 @@ void Rho1D::calculateRho(const std::vector<ScatteringPoint>& scatteringPoints) {
   std::complex<double> im(0.0, 1.0);  // definition of i
 
   //? Fix or remove the progressbar?
-  ProgressBar pbar;
+  /*ProgressBar pbar;
 
   int printStep = static_cast<double>(qVector.qqmax) / 100.;
 
   if (printStep < 1) printStep = 1;
+  */
 
 #pragma omp parallel for
   for (size_t qq = 0; qq < qVector.qqmax; ++qq) {
@@ -23,11 +24,13 @@ void Rho1D::calculateRho(const std::vector<ScatteringPoint>& scatteringPoints) {
 
     rho[qq] += sum;
 
+    /*
     if (qq % printStep == 0) {
       pbar.setProgress(100. * qq / static_cast<double>(qVector.qqmax));
       pbar.update();
     }
-  }
+    */
+    }
 }
 
 void Rho1D::exportData(const size_t NSP, const std::string& filename) {

@@ -13,11 +13,12 @@ void Rho2D::calculateRho(const std::vector<ScatteringPoint>& scatteringPoints) {
   auto& q2Vec = qPlane.q2Vector;
 
   //? Fix or remove the progressbar?
-  ProgressBar pbar;
+  /*ProgressBar pbar;
 
   int printStep = static_cast<double>(q1Vec.qqmax) / 100.;
 
   if (printStep < 1) printStep = 1;
+  */
 
 #pragma omp parallel for
   for (size_t qq1 = 0; qq1 < q1Vec.qqmax; ++qq1) {
@@ -38,10 +39,12 @@ void Rho2D::calculateRho(const std::vector<ScatteringPoint>& scatteringPoints) {
       pos_neg[qq1][qq2] += sumPosNeg;
     }
 
+    /*
     if (qq1 % printStep == 0) {
       pbar.setProgress(100. * qq1 / static_cast<double>(q1Vec.qqmax));
       pbar.update();
     }
+    */
   }
 }
 
