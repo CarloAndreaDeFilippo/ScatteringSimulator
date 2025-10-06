@@ -33,7 +33,13 @@ make -j
 To use once built:
 
 ```
-./scatteringSimulator settings.json
+./scatteringSimulator.out CONFIGURATION_FILE
+```
+
+To select the number of threads, use:
+
+```
+OMP_NUM_THREADS=NUMBER_OF_THREADS ./scatteringSimulator.out CONFIGURATION_FILE
 ```
 
 ## Documentation
@@ -108,12 +114,13 @@ $$\left|\frac{x}{s_a} \right|^r + \left|\frac{x}{s_b} \right|^s + \left|\frac{x}
 
 ### Simulation configuration file
 
-The second file, in the JSON format, contains all simulation-related information, such as the type of simulation and the mesh density of the scattering points. An example  ```settings.json``` is provided.
+The second file ```CONFIGURATION_FILE```, in the JSON format, contains all simulation-related information, such as the type of simulation and the mesh density of the scattering points. An example  ```settings.json``` is provided.
 In particular, it is possible to choose:
 * ```scattType``` (type of scattering): 
     * ```Sq``` for the structure factor: each particle is represented by a single scattering point in its center of mass
     * ```Iq``` for the full scattering intensity: each particle is represented by a random mesh of scattering points. The number of scattering points depends on the particle volume and the density of points ```rhoSP```, which can be modified in the JSON file.
-* ```scattVectors``` (scattering vector data to be computed): it describes a series of directions (```direction``` in the JSON file), their ranges of $q$ values to compute (```qmin``` and ```qmax```), and the spacing between the $q$ values (```dq```). Note: a ```dq``` value too small (on the order of $2\pi / L_{box}$) can lead to finite-size effects.
+* ```scattVectors```: a list of directions along which the 1D scattering is computed. Each vector defines a ```direction``` (that will be normalized automatically), the range of scattering vector magnitudes $|\vec{q}|$ to evaluate (```qmin``` and ```qmax```), and the spacing between consecutive $|\vec{q}|$ values (```dq```). Note: a ```dq``` value too small (on the order of $2\pi / L_{box}$) can lead to finite-size effects.
+* ```scattPlanes```: a list of planes along which the 2D scattering is computed. Each plane is specified by two vectors, ```q1Vector``` and ```q2Vector```, which are defined in the same way as the directions used for ```scattVectors```.
 * ```configurationFolder```: folder that contains all the configurations to analyze.
 * ```outputFolder```: folder that will contain the output data.
 * ```saveCogli2```: choose whether to save a visualization file compatible with [cogli2](https://sourceforge.net/projects/cogli1/), where each scattering point is represented by a sphere.
@@ -121,21 +128,30 @@ In particular, it is possible to choose:
 
 ### Output
 
-For ```simType``` set to ```1D```, the program computes the scattering data along the specified axes and saves the results in the chosen output folder:
+The program computes the scattering data and saves the results in the chosen output folder:
 ```
-project
+outputFolder
 │
-└───outputFolder
+└─── rho1D
 │   └───confName0
 │       │   axis_0.txt
-│       │   axis_1.txt
 │       │   ...
 │   └───confName1
 │       │   axis_0.txt
-│       │   axis_1.txt
+│       │   ...
+└─── rho2D
+│   └───confName0
+│       │   axis_0.txt
+│       │   ...
+│   └───confName1
+│       │   axis_0.txt
 │       │   ...
 ```
 
-The averageScatt1D.py script processes data from different configurations, calculates axis-wise averages, writes the averaged datasets into files in the data folder, and creates a plot of the results for all axes.
+The ```Analysis``` folder contains two scripts used to analyze and plot the results from a set of different configurations of the same system, allowing you to obtain more accurate averaged results.
+
+The ```averageScatt1D.py``` script processes 1D scattering data from multiple configurations, computes axis-wise averages, saves the averaged datasets to files in the data folder, and generates a combined plot showing the results for all axes.
+
+Similarly, ```averageScatt2D.py``` processes 2D scattering data from multiple configurations across all selected planes, computes plane-wise averages, saves the averaged datasets to files in the data folder, and produces a heatmap plot for each plane.
 
 [^1]: ACS Nano 2022, 16, 2, 2558–2568, [https://doi.org/10.1021/acsnano.1c09208](https://doi.org/10.1021/acsnano.1c09208)
