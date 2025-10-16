@@ -23,8 +23,9 @@ class ScatteringSystem {
   size_t cogli2MaxSpheres = 100000;
 
   ScatteringSystem() = default;
-  ScatteringSystem(ScattType sType) {
+  ScatteringSystem(ScattType sType, const double rho = 1) {
     scattType = sType;
+    rhoSP = rho;
   }
 
   //* Functions

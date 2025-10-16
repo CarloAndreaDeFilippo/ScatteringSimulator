@@ -37,7 +37,7 @@ void ScatteringSystem::cogli2(const std::array<double, 3>& Lbox, const std::stri
 
   file_out << std::fixed << std::setprecision(16);
 
-  for (size_t sp = 0; sp < cogli2MaxSpheres; sp++)
+  for (size_t sp = 0; sp < cogli2MaxSpheres && sp < scatteringPoints.size(); sp++)
     file_out << scatteringPoints[sp].cogli2(Lbox);
 
   file_out.close();

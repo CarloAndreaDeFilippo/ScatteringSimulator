@@ -24,7 +24,7 @@ void ScatteringSimulation::startSimulation() {
     //  Load particles and initialize the system
     ParticleSystem partSys(particlesFile);
 
-    ScatteringSystem scattSys(simSettings.scattType);
+    ScatteringSystem scattSys(simSettings.scattType, simSettings.rhoSP);
 
     scattSys.generateScatteringPoints(partSys.particles);
 
