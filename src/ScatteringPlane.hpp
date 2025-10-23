@@ -9,10 +9,7 @@ class ScatteringPlane {
 
   ScatteringPlane() = default;
 
-  ScatteringPlane(const ScatteringVector& scattVec1, const ScatteringVector& scattVec2) {
-    q1Vector = scattVec1;
-    q2Vector = scattVec2;
-  }
+  ScatteringPlane(const ScatteringVector& scattVec1, const ScatteringVector& scattVec2) : q1Vector(scattVec1), q2Vector(scattVec2) {}
 
   explicit ScatteringPlane(const nlohmann::json& j) : q1Vector(j.at("q1Vector")), q2Vector(j.at("q2Vector")) {};
 };

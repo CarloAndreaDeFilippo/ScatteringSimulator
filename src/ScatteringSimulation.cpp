@@ -16,7 +16,7 @@ void ScatteringSimulation::startSimulation() {
     std::string confName = configuration;
     std::cout << "Configuration " << confName << "\n";
 
-    size_t lastindex = confName.find_last_of(".");
+    size_t lastindex = confName.find_last_of('.');
     std::string confNameNoExtension = confName.substr(0, lastindex);
 
     std::string particlesFile = simSettings.configurationFolder + confName;

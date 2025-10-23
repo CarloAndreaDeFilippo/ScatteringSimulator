@@ -4,6 +4,8 @@
 
 #include <omp.h>
 
+#include <limits>
+
 #include "ProgressBar.hpp"
 
 void ScatteringSystem::generateScatteringPoints(const std::vector<Particle>& particles) {
@@ -21,7 +23,7 @@ void ScatteringSystem::generateScatteringPoints(const std::vector<Particle>& par
   }
 }
 
-void ScatteringSystem::cogli2(const std::array<double, 3>& Lbox, const std::string filename, const bool append) {
+void ScatteringSystem::cogli2(const std::array<double, 3>& Lbox, const std::string& filename, const bool append) {
   std::ofstream file_out;
 
   if (append == false) {
@@ -35,7 +37,8 @@ void ScatteringSystem::cogli2(const std::array<double, 3>& Lbox, const std::stri
     std::exit(-1);
   }
 
-  file_out << std::fixed << std::setprecision(16);
+  constexpr int DOUBLE_DECIMAL_DIGITS = std::numeric_limits<double>::digits10 + 1;
+  file_out << std::fixed << std::setprecision(DOUBLE_DECIMAL_DIGITS);
 
   for (size_t sp = 0; sp < cogli2MaxSpheres && sp < scatteringPoints.size(); sp++)
     file_out << scatteringPoints[sp].cogli2(Lbox);

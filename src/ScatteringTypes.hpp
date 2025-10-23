@@ -1,4 +1,6 @@
 #pragma once
+#include <cstdint>
 
-enum class ScattType { Sq,
-                       Iq };
+enum class ScattType : std::uint8_t { Sq,
+                                      Iq
+};

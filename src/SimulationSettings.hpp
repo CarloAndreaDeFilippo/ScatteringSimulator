@@ -15,7 +15,7 @@ class SimulationSettings {
 
   std::vector<ScatteringVector> scattVectors;
   std::vector<ScatteringPlane> scattPlanes;
-  double rhoSP;
+  double rhoSP = 1.;
 
   std::string configurationFolder;
   std::vector<std::string> configurationFiles;

@@ -21,5 +21,5 @@ void ScatteringVector::calculateQValues() {
   qValues.clear();
   qValues.reserve(qqmax);
   for (size_t qq = 0; qq < qqmax; ++qq)
-    qValues.push_back(qmin + qq * dq);
+    qValues.push_back(qmin + static_cast<double>(qq) * dq);
 }

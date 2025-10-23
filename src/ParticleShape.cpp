@@ -6,14 +6,16 @@
 std::vector<ScatteringPoint> Sphere::generateScatteringPoints(double rhoSP) {
   double volume = computeVolume();
 
-  size_t Npoints = rhoSP * volume;
+  auto Npoints = static_cast<size_t>(rhoSP * volume);
 
   std::vector<ScatteringPoint> sPoints(Npoints);
 
   for (auto& sp : sPoints) {
     do {
-      for (int ax = 0; ax < 3; ax++)
-        sp.cm[ax] = rng.drand48(-R, R);
+      sp.cm = {
+          rng.drand48(-R, R),
+          rng.drand48(-R, R),
+          rng.drand48(-R, R)};
 
       if (vectorNorm(sp.cm) <= R) break;
 
@@ -26,15 +28,16 @@ std::vector<ScatteringPoint> Sphere::generateScatteringPoints(double rhoSP) {
 std::vector<ScatteringPoint> Cylinder::generateScatteringPoints(double rhoSP) {
   double volume = computeVolume();
 
-  size_t Npoints = rhoSP * volume;
+  auto Npoints = static_cast<size_t>(rhoSP * volume);
 
   std::vector<ScatteringPoint> sPoints(Npoints);
 
   for (auto& sp : sPoints) {
     do {
-      sp.cm[0] = rng.drand48(-R, R);
-      sp.cm[1] = rng.drand48(-R, R);
-      sp.cm[2] = rng.drand48(-L2, L2);
+      sp.cm = {
+          rng.drand48(-R, R),
+          rng.drand48(-R, R),
+          rng.drand48(-L2, L2)};
 
       if (sqrt(sp.cm[0] * sp.cm[0] + sp.cm[1] * sp.cm[1]) <= R) break;
     } while (true);
@@ -46,15 +49,16 @@ std::vector<ScatteringPoint> Cylinder::generateScatteringPoints(double rhoSP) {
 std::vector<ScatteringPoint> Spherocylinder::generateScatteringPoints(double rhoSP) {
   double volume = computeVolume();
 
-  size_t Npoints = rhoSP * volume;
+  auto Npoints = static_cast<size_t>(rhoSP * volume);
 
   std::vector<ScatteringPoint> sPoints(Npoints);
 
   for (auto& sp : sPoints) {
     do {
-      sp.cm[0] = rng.drand48(-R, R);
-      sp.cm[1] = rng.drand48(-R, R);
-      sp.cm[2] = rng.drand48(-(R + L2), R + L2);
+      sp.cm = {
+          rng.drand48(-R, R),
+          rng.drand48(-R, R),
+          rng.drand48(-(R + L2), R + L2)};
 
       if (std::abs(sp.cm[2]) <= L2) {
         if (sqrt(sp.cm[0] * sp.cm[0] + sp.cm[1] * sp.cm[1]) <= R) break;
@@ -77,13 +81,15 @@ std::vector<ScatteringPoint> Spherocylinder::generateScatteringPoints(double rho
 std::vector<ScatteringPoint> Box::generateScatteringPoints(double rhoSP) {
   double volume = computeVolume();
 
-  size_t Npoints = rhoSP * volume;
+  auto Npoints = static_cast<size_t>(rhoSP * volume);
 
   std::vector<ScatteringPoint> sPoints(Npoints);
 
   for (auto& sp : sPoints) {
-    for (int ax = 0; ax < 3; ax++)
-      sp.cm[ax] = rng.drand48(-semi_axes[ax], semi_axes[ax]);
+    sp.cm = {
+        rng.drand48(-semi_axes[0], semi_axes[0]),
+        rng.drand48(-semi_axes[1], semi_axes[1]),
+        rng.drand48(-semi_axes[2], semi_axes[2])};
   }
 
   return sPoints;
@@ -92,14 +98,16 @@ std::vector<ScatteringPoint> Box::generateScatteringPoints(double rhoSP) {
 std::vector<ScatteringPoint> Ellipsoid::generateScatteringPoints(double rhoSP) {
   double volume = computeVolume();
 
-  size_t Npoints = rhoSP * volume;
+  auto Npoints = static_cast<size_t>(rhoSP * volume);
 
   std::vector<ScatteringPoint> sPoints(Npoints);
 
   for (auto& sp : sPoints) {
     do {
-      for (int ax = 0; ax < 3; ax++)
-        sp.cm[ax] = rng.drand48(-semi_axes[ax], semi_axes[ax]);
+      sp.cm = {
+          rng.drand48(-semi_axes[0], semi_axes[0]),
+          rng.drand48(-semi_axes[1], semi_axes[1]),
+          rng.drand48(-semi_axes[2], semi_axes[2])};
 
       double distance = 0.;
 
@@ -117,14 +125,16 @@ std::vector<ScatteringPoint> Ellipsoid::generateScatteringPoints(double rhoSP) {
 std::vector<ScatteringPoint> Superquadric::generateScatteringPoints(double rhoSP) {
   double volume = computeVolume();
 
-  size_t Npoints = rhoSP * volume;
+  auto Npoints = static_cast<size_t>(rhoSP * volume);
 
   std::vector<ScatteringPoint> sPoints(Npoints);
 
   for (auto& sp : sPoints) {
     do {
-      for (int ax = 0; ax < 3; ax++)
-        sp.cm[ax] = rng.drand48(-semi_axes[ax], semi_axes[ax]);
+      sp.cm = {
+          rng.drand48(-semi_axes[0], semi_axes[0]),
+          rng.drand48(-semi_axes[1], semi_axes[1]),
+          rng.drand48(-semi_axes[2], semi_axes[2])};
 
       double distance = 0.;
 

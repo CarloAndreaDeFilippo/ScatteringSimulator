@@ -30,7 +30,7 @@ void Rho1D::calculateRho(const std::vector<ScatteringPoint>& scatteringPoints) {
       pbar.update();
     }
     */
-    }
+  }
 }
 
 void Rho1D::exportData(const size_t NSP, const std::string& filename) {

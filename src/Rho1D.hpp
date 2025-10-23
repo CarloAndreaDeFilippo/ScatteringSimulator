@@ -17,10 +17,8 @@ class Rho1D {
 
   Rho1D() = default;
 
-  Rho1D(const ScatteringVector& scattVec) {
-    qVector = scattVec;
-    rho.resize(qVector.qqmax, 0.);
-  }
+  Rho1D(const ScatteringVector& scattVec)
+      : qVector(scattVec), rho(scattVec.qqmax, 0.0) {}
 
   void calculateRho(const std::vector<ScatteringPoint>& scatteringPoints);
   void exportData(const size_t NSP, const std::string& filename);

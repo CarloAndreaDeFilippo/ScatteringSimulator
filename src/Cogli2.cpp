@@ -3,6 +3,7 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <limits>
 
 void cogli2::box(const std::array<double, 3>& Lbox, const std::string& filename) {
   std::ofstream file_out;
@@ -14,7 +15,8 @@ void cogli2::box(const std::array<double, 3>& Lbox, const std::string& filename)
     std::exit(-1);
   }
 
-  file_out << std::fixed << std::setprecision(16);
+  constexpr int DOUBLE_DECIMAL_DIGITS = std::numeric_limits<double>::digits10 + 1;
+  file_out << std::fixed << std::setprecision(DOUBLE_DECIMAL_DIGITS);
 
   file_out << ".Box: " << Lbox[0] << "," << Lbox[1] << "," << Lbox[2] << "\n";
 

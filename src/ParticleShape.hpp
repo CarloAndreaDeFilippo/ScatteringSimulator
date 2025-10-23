@@ -10,14 +10,14 @@
 
 class ParticleShape {
  public:
-  virtual ~ParticleShape() {}
+  virtual ~ParticleShape() = default;
   virtual void printShape() {
     std::cout << "Base class of ParticleShape\n";
   }
 
   virtual double computeVolume() { return 0.; };
 
-  virtual std::vector<ScatteringPoint> generateScatteringPoints(double /* rhoSP */) { return std::vector<ScatteringPoint>(); };
+  virtual std::vector<ScatteringPoint> generateScatteringPoints(double /* rhoSP */) { return {}; };
 
   virtual std::string molgl(const Transform& /*tf*/) { return ""; };
 };
@@ -29,10 +29,7 @@ class Sphere : public ParticleShape {
 
   Sphere() = default;
 
-  Sphere(double diameter) {
-    D = diameter;
-    R = 0.5 * D;
-  }
+  Sphere(double diameter) : D(diameter), R(0.5 * diameter) {}
 
   void printShape() override {
     std::cout << "Sphere: D = " << D << ", R = " << R << "\n";
@@ -54,13 +51,7 @@ class Cylinder : public ParticleShape {
 
   Cylinder() = default;
 
-  Cylinder(double diameter, double length) {
-    D = diameter;
-    L = length;
-
-    R = 0.5 * D;
-    L2 = 0.5 * L;
-  }
+  Cylinder(double diameter, double length) : D(diameter), L(length), R(0.5 * diameter), L2(0.5 * length) {}
 
   void printShape() override {
     std::cout << "Cylinder: D = " << D << ", R = " << R << ", L = " << L << ", L2 = " << L2 << "\n";
@@ -82,7 +73,7 @@ class Spherocylinder : public ParticleShape {
 
   Spherocylinder() = default;
 
-  Spherocylinder(double diameter, double length) {
+  Spherocylinder(double diameter, double length) : D(diameter), L(length), R(0.5 * diameter), L2(0.5 * length) {
     D = diameter;
     L = length;
 

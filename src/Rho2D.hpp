@@ -19,11 +19,9 @@ class Rho2D {
 
   Rho2D() = default;
 
-  Rho2D(const ScatteringPlane& scattPlane) {
-    qPlane = scattPlane;
-    pos_pos.resize(qPlane.q1Vector.qqmax);
-    pos_neg.resize(qPlane.q1Vector.qqmax);
-
+  Rho2D(const ScatteringPlane& scattPlane) : qPlane(scattPlane),
+                                             pos_pos(scattPlane.q1Vector.qqmax),
+                                             pos_neg(scattPlane.q1Vector.qqmax) {
     for (auto& rho : pos_pos)
       rho.resize(qPlane.q2Vector.qqmax, 0.);
 

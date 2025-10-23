@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <limits>
 #include <sstream>
 
 ParticleSystem::ParticleSystem(const std::string& infile) {
@@ -132,7 +133,8 @@ void ParticleSystem::molgl(const std::string& filename, const bool append) {
     std::exit(-1);
   }
 
-  file_out << std::fixed << std::setprecision(16);
+  constexpr int DOUBLE_DECIMAL_DIGITS = std::numeric_limits<double>::digits10 + 1;
+  file_out << std::fixed << std::setprecision(DOUBLE_DECIMAL_DIGITS);
 
   for (auto& part : particles) {
     file_out << part.molgl();
