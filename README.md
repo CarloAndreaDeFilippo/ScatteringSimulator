@@ -114,7 +114,7 @@ $$\left|\frac{x}{s_a} \right|^r + \left|\frac{x}{s_b} \right|^s + \left|\frac{x}
 
 ### Simulation configuration file
 
-The second file ```CONFIGURATION_FILE```, in the JSON format, contains all simulation-related information, such as the type of simulation and the mesh density of the scattering points. An example  ```settings.json``` is provided.
+The second file ```CONFIGURATION_FILE```, in the JSON format (see [nlohmann json](https://github.com/nlohmann/json)), contains all simulation-related information, such as the type of simulation and the mesh density of the scattering points. An example  ```settings.json``` is provided.
 In particular, it is possible to choose:
 * ```scattType``` (type of scattering): 
     * ```Sq``` for the structure factor: each particle is represented by a single scattering point in its center of mass
