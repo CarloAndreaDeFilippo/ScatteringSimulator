@@ -20,7 +20,7 @@ class ScatteringSystem {
   std::vector<Rho1D> vecRho1D;
   std::vector<Rho2D> vecRho2D;
 
-  size_t cogli2MaxSpheres = 100000;
+  static constexpr size_t cogli2MaxSpheres = 100000;
 
   ScatteringSystem() = default;
   ScatteringSystem(ScattType sType, double rho = 1.0)
