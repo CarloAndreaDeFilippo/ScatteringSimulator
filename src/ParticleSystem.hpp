@@ -16,7 +16,7 @@ class ParticleSystem {
   ParticleSystem() = default;
   ParticleSystem(const std::string& infile);
 
-  void addParticle(const Particle& part);
+  void addParticle(Particle&& part);
   void loadSystem(const std::string& infile);
   void molgl(const std::string& filename, const bool append);
 };

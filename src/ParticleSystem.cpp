@@ -9,8 +9,8 @@ ParticleSystem::ParticleSystem(const std::string& infile) {
   loadSystem(infile);
 }
 
-void ParticleSystem::addParticle(const Particle& part) {
-  particles.push_back(part);
+void ParticleSystem::addParticle(Particle&& part) {
+  particles.push_back(std::move(part));
   N++;
 }
 
@@ -46,7 +46,7 @@ void ParticleSystem::loadSystem(const std::string& infile) {
 
       double D = 1.;
       iss >> D;
-      part.particleShape = std::make_shared<Sphere>(Sphere(D));
+      part.particleShape = std::unique_ptr<Sphere>(new Sphere(D));
 
     } else if (partType == "CYL") {
       // std::cout << "Cylinder\n";
@@ -55,7 +55,7 @@ void ParticleSystem::loadSystem(const std::string& infile) {
       double L = 1.;
 
       iss >> D >> L;
-      part.particleShape = std::make_shared<Cylinder>(Cylinder(D, L));
+      part.particleShape = std::unique_ptr<Cylinder>(new Cylinder(D, L));
 
     } else if (partType == "SPHCYL") {
       // std::cout << "Spherocylinder\n";
@@ -64,7 +64,7 @@ void ParticleSystem::loadSystem(const std::string& infile) {
       double L = 1.;
 
       iss >> D >> L;
-      part.particleShape = std::make_shared<Spherocylinder>(Spherocylinder(D, L));
+      part.particleShape = std::unique_ptr<Spherocylinder>(new Spherocylinder(D, L));
 
     } else if (partType == "BOX") {
       // std::cout << "Box\n";
@@ -75,7 +75,7 @@ void ParticleSystem::loadSystem(const std::string& infile) {
 
       iss >> a >> b >> c;
 
-      part.particleShape = std::make_shared<Box>(Box(a, b, c));
+      part.particleShape = std::unique_ptr<Box>(new Box(a, b, c));
 
     } else if (partType == "ELL") {
       // std::cout << "Ellipsoid\n";
@@ -86,7 +86,7 @@ void ParticleSystem::loadSystem(const std::string& infile) {
 
       iss >> a >> b >> c;
 
-      part.particleShape = std::make_shared<Ellipsoid>(Ellipsoid(a, b, c));
+      part.particleShape = std::unique_ptr<Ellipsoid>(new Ellipsoid(a, b, c));
 
     } else if (partType == "SQUAD") {
       // std::cout << "Superquadric\n";
@@ -102,7 +102,7 @@ void ParticleSystem::loadSystem(const std::string& infile) {
       iss >> a >> b >> c;
       iss >> r >> s >> t;
 
-      part.particleShape = std::make_shared<Superquadric>(Superquadric(a, b, c, r, s, t));
+      part.particleShape = std::unique_ptr<Superquadric>(new Superquadric(a, b, c, r, s, t));
 
     } else {
       std::cout << "Unknown particle type\n";
@@ -115,7 +115,7 @@ void ParticleSystem::loadSystem(const std::string& infile) {
     iss >> part.tf.R[1][0] >> part.tf.R[1][1] >> part.tf.R[1][2];
     iss >> part.tf.R[2][0] >> part.tf.R[2][1] >> part.tf.R[2][2];
 
-    addParticle(part);
+    addParticle(std::move(part));
   }
 }
 

@@ -12,7 +12,7 @@ class Particle {
  public:
   Transform tf;  // Particle position and orientation
 
-  std::shared_ptr<ParticleShape> particleShape;  // Geometry of the particle
+  std::unique_ptr<ParticleShape> particleShape;  // Geometry of the particle
 
   std::vector<ScatteringPoint> generateScatteringPoints(double rhoSP) const;
 
