@@ -33,13 +33,13 @@ make -j
 To use once built:
 
 ```
-./scatteringSimulator.out CONFIGURATION_FILE
+./scatteringSimulator.out SETTINGS_FILE
 ```
 
 To select the number of threads, use:
 
 ```
-OMP_NUM_THREADS=NUMBER_OF_THREADS ./scatteringSimulator.out CONFIGURATION_FILE
+OMP_NUM_THREADS=NUMBER_OF_THREADS ./scatteringSimulator.out SETTINGS_FILE
 ```
 
 ## Documentation
@@ -114,7 +114,7 @@ $$\left|\frac{x}{s_a} \right|^r + \left|\frac{x}{s_b} \right|^s + \left|\frac{x}
 
 ### Simulation configuration file
 
-The second file ```CONFIGURATION_FILE```, in the JSON format (see [nlohmann json](https://github.com/nlohmann/json)), contains all simulation-related information, such as the type of simulation and the mesh density of the scattering points. An example  ```settings.json``` is provided.
+The second file ```SETTINGS_FILE```, in the JSON format (see [nlohmann json](https://github.com/nlohmann/json)), contains all simulation-related information, such as the type of simulation and the mesh density of the scattering points. An example  ```settings.json``` is provided.
 In particular, it is possible to choose:
 * ```scattType``` (type of scattering): 
     * ```Sq``` for the structure factor: each particle is represented by a single scattering point in its center of mass
