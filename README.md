@@ -110,7 +110,7 @@ where $(s_a, s_b, s_c)$ are the three semiaxes of the ellipsoid.
 SQUAD s_a s_b s_c r s t
 ```
 where $(s_a, s_b, s_c)$ are the three semiaxes of the superquadric, and $(r, s, t)$ are the exponents that define the superquadric:
-$$\left|\frac{x}{s_a} \right|^r + \left|\frac{x}{s_b} \right|^s + \left|\frac{x}{s_c} \right|^t = 1 $$
+$$\left|\frac{x}{s_a} \right|^r + \left|\frac{y}{s_b} \right|^s + \left|\frac{z}{s_c} \right|^t = 1 $$
 
 ### Simulation configuration file
 
