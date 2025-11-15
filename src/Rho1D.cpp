@@ -3,8 +3,6 @@
 #include "ProgressBar.hpp"
 
 void Rho1D::calculateRho(const std::vector<ScatteringPoint>& scatteringPoints) {
-  std::complex<double> im(0.0, 1.0);  // definition of i
-
   //? Fix or remove the progressbar?
   /*ProgressBar pbar;
 
@@ -13,16 +11,27 @@ void Rho1D::calculateRho(const std::vector<ScatteringPoint>& scatteringPoints) {
   if (printStep < 1) printStep = 1;
   */
 
+  const size_t nSP = scatteringPoints.size();
+
+  std::vector<double> projBase(nSP);
+  for (size_t i = 0; i < nSP; ++i) {
+    projBase[i] = dotProduct(qVector.qAxis, scatteringPoints[i].cm);
+  }
+
 #pragma omp parallel for
   for (size_t qq = 0; qq < qVector.qqmax; ++qq) {
-    std::complex<double> sum = 0.;
     double qModule = qVector.qValues[qq];
 
-    for (auto& sp : scatteringPoints) {
-      sum += std::exp(-im * dotProduct(qVector.qAxis, sp.cm) * qModule);
+    double sum_re = 0.0;
+    double sum_im = 0.0;
+
+    for (size_t i = 0; i < nSP; ++i) {
+      double angle = projBase[i] * qModule;
+      sum_re += std::cos(angle);
+      sum_im -= std::sin(angle);
     }
 
-    rho[qq] += sum;
+    rho[qq] += std::complex<double>(sum_re, sum_im);
 
     /*
     if (qq % printStep == 0) {

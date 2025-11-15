@@ -2,23 +2,28 @@
 
 #include "ScatteringSystem.hpp"
 
-#include <omp.h>
-
 #include <limits>
 
 #include "ProgressBar.hpp"
 
 void ScatteringSystem::generateScatteringPoints(const std::vector<Particle>& particles) {
-  for (const auto& part : particles) {
-    if (scattType == ScattType::Sq) {  // Calculate S(q)
-      ScatteringPoint sp;
-      sp.cm = part.tf.cm;
-      scatteringPoints.push_back(sp);
-      NSP++;
-    } else {  // Calculate full I(q)
-      std::vector<ScatteringPoint> particleScatteringPoints = part.generateScatteringPoints(rhoSP);
-      scatteringPoints.insert(scatteringPoints.end(), particleScatteringPoints.begin(), particleScatteringPoints.end());
-      NSP += particleScatteringPoints.size();
+  // Case S(q)
+  if (scattType == ScattType::Sq) {
+    scatteringPoints.reserve(particles.size());
+    for (size_t i = 0; i < particles.size(); ++i) {
+      scatteringPoints[i].cm = particles[i].tf.cm;
+    }
+  } else {  // Case full I(q)
+    NSP = 0;
+
+    for (const auto& part : particles) {
+      std::vector<ScatteringPoint> partSPoints = part.generateScatteringPoints(rhoSP);
+      NSP += partSPoints.size();
+
+      scatteringPoints.insert(
+          scatteringPoints.end(),
+          std::make_move_iterator(partSPoints.begin()),
+          std::make_move_iterator(partSPoints.end()));
     }
   }
 }

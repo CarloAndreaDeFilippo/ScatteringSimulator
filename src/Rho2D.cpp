@@ -12,6 +12,8 @@ void Rho2D::calculateRho(const std::vector<ScatteringPoint>& scatteringPoints) {
   auto& q1Vec = qPlane.q1Vector;
   auto& q2Vec = qPlane.q2Vector;
 
+  const size_t nSP = scatteringPoints.size();
+
   //? Fix or remove the progressbar?
   /*ProgressBar pbar;
 
@@ -20,23 +22,38 @@ void Rho2D::calculateRho(const std::vector<ScatteringPoint>& scatteringPoints) {
   if (printStep < 1) printStep = 1;
   */
 
+  std::vector<double> proj1Base(nSP);
+  std::vector<double> proj2Base(nSP);
+
+  for (size_t i = 0; i < nSP; ++i) {
+    proj1Base[i] = dotProduct(q1Vec.qAxis, scatteringPoints[i].cm);
+    proj2Base[i] = dotProduct(q2Vec.qAxis, scatteringPoints[i].cm);
+  }
+
 #pragma omp parallel for
   for (size_t qq1 = 0; qq1 < q1Vec.qqmax; ++qq1) {
     double q1Module = q1Vec.qValues[qq1];
     for (size_t qq2 = 0; qq2 < q2Vec.qqmax; ++qq2) {
-      std::complex<double> sumPosPos = 0.;
-      std::complex<double> sumPosNeg = 0.;
       double q2Module = q2Vec.qValues[qq2];
 
-      for (auto& sp : scatteringPoints) {
-        double projection1 = dotProduct(q1Vec.qAxis, sp.cm) * q1Module;
-        double projection2 = dotProduct(q2Vec.qAxis, sp.cm) * q2Module;
-        sumPosPos += std::exp(-im * (projection1 + projection2));
-        sumPosNeg += std::exp(-im * (projection1 - projection2));
+      double sumPP_re = 0.0, sumPP_im = 0.0;
+      double sumPN_re = 0.0, sumPN_im = 0.0;
+
+      for (size_t i = 0; i < nSP; ++i) {
+        double proj1 = proj1Base[i] * q1Module;
+        double proj2 = proj2Base[i] * q2Module;
+
+        double anglePP = proj1 + proj2;
+        double anglePN = proj1 - proj2;
+
+        sumPP_re += std::cos(anglePP);
+        sumPP_im -= std::sin(anglePP);
+        sumPN_re += std::cos(anglePN);
+        sumPN_im -= std::sin(anglePN);
       }
 
-      pos_pos[qq1][qq2] += sumPosPos;
-      pos_neg[qq1][qq2] += sumPosNeg;
+      pos_pos[qq1][qq2] += std::complex<double>(sumPP_re, sumPP_im);
+      pos_neg[qq1][qq2] += std::complex<double>(sumPN_re, sumPN_im);
     }
 
     /*

@@ -46,7 +46,7 @@
             }
         }
     ],
-    "rhoSP": 10.0,
+    "rhoSP": 1.0,
     "configurationsFolder": "Configurations/",
     "outputFolder": "Data/",
     "saveCogli2": false,
