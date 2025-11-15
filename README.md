@@ -33,13 +33,13 @@ make -j
 To use once built:
 
 ```
-./scatteringSimulator.out CONFIGURATION_FILE
+./scatteringSimulator.out SETTINGS_FILE
 ```
 
 To select the number of threads, use:
 
 ```
-OMP_NUM_THREADS=NUMBER_OF_THREADS ./scatteringSimulator.out CONFIGURATION_FILE
+OMP_NUM_THREADS=NUMBER_OF_THREADS ./scatteringSimulator.out SETTINGS_FILE
 ```
 
 ## Documentation
@@ -110,11 +110,11 @@ where $(s_a, s_b, s_c)$ are the three semiaxes of the ellipsoid.
 SQUAD s_a s_b s_c r s t
 ```
 where $(s_a, s_b, s_c)$ are the three semiaxes of the superquadric, and $(r, s, t)$ are the exponents that define the superquadric:
-$$\left|\frac{x}{s_a} \right|^r + \left|\frac{x}{s_b} \right|^s + \left|\frac{x}{s_c} \right|^t = 1 $$
+$$\left|\frac{x}{s_a} \right|^r + \left|\frac{y}{s_b} \right|^s + \left|\frac{z}{s_c} \right|^t = 1 $$
 
 ### Simulation configuration file
 
-The second file ```CONFIGURATION_FILE```, in the JSON format (see [nlohmann json](https://github.com/nlohmann/json)), contains all simulation-related information, such as the type of simulation and the mesh density of the scattering points. An example  ```settings.json``` is provided.
+The second file ```SETTINGS_FILE```, in the JSON format (see [nlohmann json](https://github.com/nlohmann/json)), contains all simulation-related information, such as the type of simulation and the mesh density of the scattering points. An example  ```settings.json``` is provided.
 In particular, it is possible to choose:
 * ```scattType``` (type of scattering): 
     * ```Sq``` for the structure factor: each particle is represented by a single scattering point in its center of mass
