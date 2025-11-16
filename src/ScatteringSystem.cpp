@@ -9,7 +9,8 @@
 void ScatteringSystem::generateScatteringPoints(const std::vector<Particle>& particles) {
   // Case S(q)
   if (scattType == ScattType::Sq) {
-    scatteringPoints.reserve(particles.size());
+    NSP = particles.size();
+    scatteringPoints.resize(particles.size());
     for (size_t i = 0; i < particles.size(); ++i) {
       scatteringPoints[i].cm = particles[i].tf.cm;
     }
