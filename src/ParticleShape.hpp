@@ -73,13 +73,7 @@ class Spherocylinder : public ParticleShape {
 
   Spherocylinder() = default;
 
-  Spherocylinder(double diameter, double length) : D(diameter), L(length), R(0.5 * diameter), L2(0.5 * length) {
-    D = diameter;
-    L = length;
-
-    R = 0.5 * D;
-    L2 = 0.5 * L;
-  }
+  Spherocylinder(double diameter, double length) : D(diameter), L(length), R(0.5 * D), L2(0.5 * L) {}
 
   void printShape() override {
     std::cout << "Spherocylinder: D = " << D << ", R = " << R << ", L = " << L << ", L2 = " << L2 << "\n";
@@ -133,15 +127,8 @@ class Box : public ParticleShape {
 
   Box() = default;
 
-  Box(double a, double b, double c) {
-    axes[0] = a;
-    axes[1] = b;
-    axes[2] = c;
-
-    semi_axes[0] = 0.5 * a;
-    semi_axes[1] = 0.5 * b;
-    semi_axes[2] = 0.5 * c;
-  }
+  Box(double a, double b, double c) : axes{{a, b, c}},
+                                      semi_axes{{0.5 * a, 0.5 * b, 0.5 * c}} {}
 
   void printShape() override {
     std::cout << "Box: a = " << axes[0] << ", b = " << axes[1] << ", c = " << axes[2] << "\n";
@@ -181,11 +168,7 @@ class Ellipsoid : public ParticleShape {
 
   Ellipsoid() = default;
 
-  Ellipsoid(double a, double b, double c) {
-    semi_axes[0] = a;
-    semi_axes[1] = b;
-    semi_axes[2] = c;
-  }
+  Ellipsoid(double a, double b, double c) : semi_axes{{a, b, c}} {}
 
   void printShape() override {
     std::cout << "Ellipsoid: a = " << semi_axes[0] << ", b = " << semi_axes[1] << ", c = " << semi_axes[2] << "\n";
@@ -205,15 +188,8 @@ class Superquadric : public ParticleShape {
 
   Superquadric() = default;
 
-  Superquadric(double a, double b, double c, double r, double s, double t) {
-    semi_axes[0] = a;
-    semi_axes[1] = b;
-    semi_axes[2] = c;
-
-    exponents[0] = r;
-    exponents[1] = s;
-    exponents[2] = t;
-  }
+  Superquadric(double a, double b, double c, double r, double s, double t) : semi_axes{{a, b, c}},
+                                                                             exponents{{r, s, t}} {}
 
   void printShape() override {
     std::cout << "Superquadric:\n";
