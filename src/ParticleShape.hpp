@@ -8,6 +8,8 @@
 #include "ScatteringPoint.hpp"
 #include "Transform.hpp"
 
+// TODO: separate the shapes into different files
+
 class ParticleShape {
  public:
   virtual ~ParticleShape() = default;

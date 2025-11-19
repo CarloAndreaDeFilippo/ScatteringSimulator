@@ -36,6 +36,8 @@ void ScatteringSimulation::startSimulation() {
 
     // TODO: logscale support
 
+    // TODO: spherical average S(q) or I(q)
+
     // TODO: check for finite-size effects in dq
 
     // Rho1D
