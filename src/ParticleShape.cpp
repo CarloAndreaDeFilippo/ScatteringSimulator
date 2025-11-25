@@ -13,9 +13,9 @@ std::vector<ScatteringPoint> Sphere::generateScatteringPoints(double rhoSP) {
   for (auto& sp : sPoints) {
     while (true) {
       sp.cm = {
-          rng.drand48(-R, R),
-          rng.drand48(-R, R),
-          rng.drand48(-R, R)};
+          rng().randomDouble(-R, R),
+          rng().randomDouble(-R, R),
+          rng().randomDouble(-R, R)};
 
       if (vectorNorm(sp.cm) <= R) break;
     };
@@ -34,9 +34,9 @@ std::vector<ScatteringPoint> Cylinder::generateScatteringPoints(double rhoSP) {
   for (auto& sp : sPoints) {
     while (true) {
       sp.cm = {
-          rng.drand48(-R, R),
-          rng.drand48(-R, R),
-          rng.drand48(-L2, L2)};
+          rng().randomDouble(-R, R),
+          rng().randomDouble(-R, R),
+          rng().randomDouble(-L2, L2)};
 
       if (sqrt(sp.cm[0] * sp.cm[0] + sp.cm[1] * sp.cm[1]) <= R) break;
     };
@@ -55,9 +55,9 @@ std::vector<ScatteringPoint> Spherocylinder::generateScatteringPoints(double rho
   for (auto& sp : sPoints) {
     while (true) {
       sp.cm = {
-          rng.drand48(-R, R),
-          rng.drand48(-R, R),
-          rng.drand48(-(R + L2), R + L2)};
+          rng().randomDouble(-R, R),
+          rng().randomDouble(-R, R),
+          rng().randomDouble(-(R + L2), R + L2)};
 
       if (std::abs(sp.cm[2]) <= L2) {
         if (sqrt(sp.cm[0] * sp.cm[0] + sp.cm[1] * sp.cm[1]) <= R) break;
@@ -85,9 +85,9 @@ std::vector<ScatteringPoint> Box::generateScatteringPoints(double rhoSP) {
 
   for (auto& sp : sPoints) {
     sp.cm = {
-        rng.drand48(-semi_axes[0], semi_axes[0]),
-        rng.drand48(-semi_axes[1], semi_axes[1]),
-        rng.drand48(-semi_axes[2], semi_axes[2])};
+        rng().randomDouble(-semi_axes[0], semi_axes[0]),
+        rng().randomDouble(-semi_axes[1], semi_axes[1]),
+        rng().randomDouble(-semi_axes[2], semi_axes[2])};
   }
 
   return sPoints;
@@ -103,9 +103,9 @@ std::vector<ScatteringPoint> Ellipsoid::generateScatteringPoints(double rhoSP) {
   for (auto& sp : sPoints) {
     while (true) {
       sp.cm = {
-          rng.drand48(-semi_axes[0], semi_axes[0]),
-          rng.drand48(-semi_axes[1], semi_axes[1]),
-          rng.drand48(-semi_axes[2], semi_axes[2])};
+          rng().randomDouble(-semi_axes[0], semi_axes[0]),
+          rng().randomDouble(-semi_axes[1], semi_axes[1]),
+          rng().randomDouble(-semi_axes[2], semi_axes[2])};
 
       double distance = 0.;
 
@@ -129,9 +129,9 @@ std::vector<ScatteringPoint> Superquadric::generateScatteringPoints(double rhoSP
   for (auto& sp : sPoints) {
     while (true) {
       sp.cm = {
-          rng.drand48(-semi_axes[0], semi_axes[0]),
-          rng.drand48(-semi_axes[1], semi_axes[1]),
-          rng.drand48(-semi_axes[2], semi_axes[2])};
+          rng().randomDouble(-semi_axes[0], semi_axes[0]),
+          rng().randomDouble(-semi_axes[1], semi_axes[1]),
+          rng().randomDouble(-semi_axes[2], semi_axes[2])};
 
       double distance = 0.;
 

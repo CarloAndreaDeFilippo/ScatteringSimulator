@@ -5,6 +5,16 @@
 
 class Random {
  public:
+  double drand48() {
+    return std::uniform_real_distribution<double>{0., 1.}(mt);
+  }
+
+  double randomDouble(double a, double b) {
+    // return drand48() * (b - a) + a;
+    return std::uniform_real_distribution<double>{a, b}(mt);
+  }
+
+ private:
   std::mt19937 generate() {
     std::random_device rd{};
 
@@ -17,16 +27,9 @@ class Random {
   }
 
   std::mt19937 mt{generate()};
+};
 
-  double drand48() {
-    return std::uniform_real_distribution<double>{0., 1.}(mt);
-  }
-
-  double drand48(double a, double b) {
-    // return drand48() * (b - a) + a;
-    return std::uniform_real_distribution<double>{a, b}(mt);
-  }
-
+inline Random& rng() {
+  static Random instance;
+  return instance;
 }
-
-extern rng;
