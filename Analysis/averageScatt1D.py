@@ -26,6 +26,9 @@ for axisName in axesNames:
     avg = all_data.groupby(["q"], as_index=False)["I"].mean()
     averageData.append(avg)
 
+    #Save averaged data
+    avg.to_csv(f"{dataFoldName}/avAxis_{axisName}.txt", sep=" ", index=None)
+
 #Plot of all the axes
 plt.figure(figsize=(8,6))
 plt.loglog()

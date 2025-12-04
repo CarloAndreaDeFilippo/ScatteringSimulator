@@ -30,7 +30,9 @@ void Rho2D::calculateRho(const std::vector<ScatteringPoint>& scatteringPoints) {
     proj2Base[i] = dotProduct(q2Vec.qAxis, scatteringPoints[i].cm);
   }
 
+#ifdef USE_OPENMP
 #pragma omp parallel for
+#endif
   for (size_t qq1 = 0; qq1 < q1Vec.qqmax; ++qq1) {
     double q1Module = q1Vec.qValues[qq1];
     for (size_t qq2 = 0; qq2 < q2Vec.qqmax; ++qq2) {

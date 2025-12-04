@@ -18,7 +18,9 @@ void Rho1D::calculateRho(const std::vector<ScatteringPoint>& scatteringPoints) {
     projBase[i] = dotProduct(qVector.qAxis, scatteringPoints[i].cm);
   }
 
+#ifdef USE_OPENMP
 #pragma omp parallel for
+#endif
   for (size_t qq = 0; qq < qVector.qqmax; ++qq) {
     double qModule = qVector.qValues[qq];
 
