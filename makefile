@@ -2,7 +2,7 @@
 # Compiler and compiler flags
 CXX      := g++
 CXXFLAGS := -std=c++11 -Wall -Wextra
-LFLAGS   := -fopenmp
+LFLAGS   := 
 
 # If USE_OMP=1 OpenMP is enabled (default)
 USE_OMP ?= 1
@@ -10,6 +10,7 @@ USE_OMP ?= 1
 ifeq ($(USE_OMP),1)
     CXXFLAGS += -fopenmp
     CPPFLAGS += -DUSE_OPENMP
+    LFLAGS   += -fopenmp
 endif
 
 # Directories
