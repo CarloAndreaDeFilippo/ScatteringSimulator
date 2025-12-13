@@ -22,13 +22,24 @@ void Rho2D::calculateRho(const std::vector<ScatteringPoint>& scatteringPoints) {
   if (printStep < 1) printStep = 1;
   */
 
-  std::vector<double> proj1Base(nSP);
-  std::vector<double> proj2Base(nSP);
+  std::vector<double> projBase1(nSP);
+  std::vector<double> projBase2(nSP);
 
   for (size_t i = 0; i < nSP; ++i) {
-    proj1Base[i] = dotProduct(q1Vec.qAxis, scatteringPoints[i].cm);
-    proj2Base[i] = dotProduct(q2Vec.qAxis, scatteringPoints[i].cm);
+    projBase1[i] = dotProduct(q1Vec.qAxis, scatteringPoints[i].cm);
+    projBase2[i] = dotProduct(q2Vec.qAxis, scatteringPoints[i].cm);
   }
+
+#ifdef USE_CUDA
+  computeRhoCUDA(projBase1, projBase2);
+#else
+  computeRhoCPU(projBase1, projBase2);
+#endif
+}
+
+void Rho2D::computeRhoCPU(const std::vector<double>& projBase1, const std::vector<double>& projBase2) {
+  auto& q1Vec = qPlane.q1Vector;
+  auto& q2Vec = qPlane.q2Vector;
 
 #ifdef USE_OPENMP
 #pragma omp parallel for
@@ -41,9 +52,9 @@ void Rho2D::calculateRho(const std::vector<ScatteringPoint>& scatteringPoints) {
       double sumPP_re = 0.0, sumPP_im = 0.0;
       double sumPN_re = 0.0, sumPN_im = 0.0;
 
-      for (size_t i = 0; i < nSP; ++i) {
-        double proj1 = proj1Base[i] * q1Module;
-        double proj2 = proj2Base[i] * q2Module;
+      for (size_t i = 0; i < projBase1.size(); ++i) {
+        double proj1 = projBase1[i] * q1Module;
+        double proj2 = projBase2[i] * q2Module;
 
         double anglePP = proj1 + proj2;
         double anglePN = proj1 - proj2;

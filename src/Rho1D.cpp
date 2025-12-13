@@ -18,6 +18,14 @@ void Rho1D::calculateRho(const std::vector<ScatteringPoint>& scatteringPoints) {
     projBase[i] = dotProduct(qVector.qAxis, scatteringPoints[i].cm);
   }
 
+#ifdef USE_CUDA
+  computeRhoCUDA(projBase);
+#else
+  computeRhoCPU(projBase);
+#endif
+}
+
+void Rho1D::computeRhoCPU(const std::vector<double>& projBase) {
 #ifdef USE_OPENMP
 #pragma omp parallel for
 #endif
@@ -27,8 +35,8 @@ void Rho1D::calculateRho(const std::vector<ScatteringPoint>& scatteringPoints) {
     double sum_re = 0.0;
     double sum_im = 0.0;
 
-    for (size_t i = 0; i < nSP; ++i) {
-      double angle = projBase[i] * qModule;
+    for (auto proj : projBase) {
+      double angle = proj * qModule;
       sum_re += std::cos(angle);
       sum_im -= std::sin(angle);
     }

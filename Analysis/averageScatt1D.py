@@ -32,6 +32,7 @@ for axisName in axesNames:
 #Plot of all the axes
 plt.figure(figsize=(8,6))
 plt.loglog()
+plt.xlim(0.1, 4.)
 
 for na, axis in enumerate(averageData):
     plt.plot(axis['q'], axis['I'], 'o--', markersize=2, label=f"Axis {axesNames[na]}")

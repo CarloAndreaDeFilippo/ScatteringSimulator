@@ -21,5 +21,9 @@ class Rho1D {
       : qVector(scattVec), rho(scattVec.qqmax, 0.0) {}
 
   void calculateRho(const std::vector<ScatteringPoint>& scatteringPoints);
+
+  void computeRhoCPU(const std::vector<double>& projBase);
+  void computeRhoCUDA(const std::vector<double>& projBase);
+
   void exportData(const size_t NSP, const std::string& filename);
 };

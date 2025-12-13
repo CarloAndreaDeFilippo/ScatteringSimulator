@@ -30,5 +30,9 @@ class Rho2D {
   }
 
   void calculateRho(const std::vector<ScatteringPoint>& scatteringPoints);
+
+  void computeRhoCPU(const std::vector<double>& projBase1, const std::vector<double>& projBase2);
+  void computeRhoCUDA(const std::vector<double>& projBase1, const std::vector<double>& projBase2);
+
   void exportData(const size_t NSP, const std::string& filename);
 };
