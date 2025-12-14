@@ -2,6 +2,8 @@
 
 C++11 program for simulating scattering in a system of particles with different shapes, parallelized with OpenMP.
 
+> **Experimental CUDA support** is available for accelerating the computation of the scattering density on NVIDIA GPUs. The CUDA backend is optional, disabled by default, and currently considered experimental.
+
 ## Theoretical background
 
 Each particle in the system is represented by a random cloud of scattering points. The program computes the static structure factor of the input set of particles [^1]:
@@ -22,6 +24,7 @@ Currently, only Linux is supported.
 
 * C++11 compiler (g++)
 * An OpenMP-enabled compiler is not required. OpenMP is enabled by default, but you can disable it at compile time if needed.
+* (Optional, experimental) NVIDIA GPU with CUDA support, NVIDIA CUDA Toolkit (for `nvcc`, required only when explicitly building with `USE_CUDA=1`).
 
 ### Building
 
@@ -41,6 +44,12 @@ Build without OpenMP:
 
 ```
 make USE_OMP=0 -j
+```
+
+Building with CUDA (experimental):
+
+```
+make USE_CUDA=1 -j
 ```
 
 ### Usage
