@@ -44,6 +44,7 @@ void Rho1D::computeRhoCUDA(const std::vector<double>& projBase) {
   }
 
   cudaDeviceSynchronize();
+
   err = cudaGetLastError();
   if (err != cudaSuccess) {
     printf("CUDA kernel runtime error: %s\n", cudaGetErrorString(err));

@@ -1,6 +1,8 @@
 #include <cuComplex.h>
 #include <cuda_runtime.h>
 
+#include <iostream>
+
 #include "../Rho2D.hpp"
 
 extern "C" __global__ void rho2D_kernel_add(
@@ -51,7 +53,18 @@ void Rho2D::computeRhoCUDA(const std::vector<double>& projBase1, const std::vect
                                     d_q1, M1,
                                     d_q2, M2,
                                     d_pp, d_pn);
+
+  cudaError_t err = cudaGetLastError();
+  if (err != cudaSuccess) {
+    printf("CUDA kernel launch error: %s\n", cudaGetErrorString(err));
+  }
+
   cudaDeviceSynchronize();
+
+  err = cudaGetLastError();
+  if (err != cudaSuccess) {
+    printf("CUDA kernel runtime error: %s\n", cudaGetErrorString(err));
+  }
 
   // copy back
   cudaMemcpy(h_pp.data(), d_pp, P * sizeof(cuDoubleComplex), cudaMemcpyDeviceToHost);
