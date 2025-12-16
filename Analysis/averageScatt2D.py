@@ -1,21 +1,22 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-import os
+import matplotlib.colors as colors
+from pathlib import Path
 
-dataFoldName = "../Data"
+dataFoldName = Path("../Data")
 
-foldname = f"{dataFoldName}/rho2D" 
+foldname = dataFoldName / "rho2D" 
 
-configurationFolders = [f"{foldname}/{f}" for f in os.listdir(foldname)]
+configurationFolders = [fold for fold in foldname.iterdir() if fold.is_dir()]
 
-planeNames = [os.path.splitext(f)[0] for f in os.listdir(configurationFolders[0])]
+planeNames = [f.stem for f in configurationFolders[0].iterdir() if f.is_file()]
 
 averageData = []
 
 for planeName in planeNames:
     all_dfs = []
     for confFold in configurationFolders:
-        df = pd.read_csv(f"{confFold}/{planeName}.txt",
+        df = pd.read_csv(confFold /f"{planeName}.txt",
                          header=None, sep=" ", names=["q1", "q2", "I"])
         all_dfs.append(df)
 
@@ -33,12 +34,12 @@ for planeName in planeNames:
     Z = grid.values
 
     plt.figure(figsize=(8,6))
-    plt.pcolormesh(Y, X, Z, shading="auto", cmap="viridis")
+    plt.pcolormesh(Y, X, Z, shading="auto", cmap="viridis", norm=colors.LogNorm())
     plt.colorbar(label="I")
     plt.xlabel("q1")
     plt.ylabel("q2")
-    plt.savefig(f"{dataFoldName}/heatmap_{planeName}.png", format="png", bbox_inches="tight", dpi=600)
+    plt.savefig(dataFoldName / f"heatmap_{planeName}.png", format="png", bbox_inches="tight", dpi=600)
     plt.close()
 
     #Save averaged data
-    avg.to_csv(f"{dataFoldName}/avPlane_{planeName}.txt", sep=" ", index=None)
+    avg.to_csv(dataFoldName / f"avPlane_{planeName}.txt", sep=" ", index=None)
