@@ -28,6 +28,7 @@ ifeq ($(USE_CUDA),1)
     NVCC_ARCH_FLAGS = -gencode arch=compute_61,code=sm_61
     CUDA_SOURCES := src/cuda/Rho1D_cuda.cu src/cuda/rho1d_kernel.cu src/cuda/Rho2D_cuda.cu src/cuda/rho2d_kernel.cu
     CXXFLAGS += -DUSE_CUDA
+    USE_OPENMP := 0
     CUDA_LFLAGS :=
 else
     CUDA_SOURCES :=
