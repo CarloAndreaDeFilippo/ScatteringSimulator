@@ -7,7 +7,7 @@ CXXFLAGS := -std=c++11
 LFLAGS   :=
 
 # Build options for OMP and CUDA (0 false, 1 true)
-USE_OMP  ?= 1
+USE_OPENMP  ?= 1
 USE_CUDA ?= 0
 
 # Directories
@@ -28,14 +28,14 @@ ifeq ($(USE_CUDA),1)
     NVCC_ARCH_FLAGS = -gencode arch=compute_61,code=sm_61
     CUDA_SOURCES := src/cuda/Rho1D_cuda.cu src/cuda/rho1d_kernel.cu src/cuda/Rho2D_cuda.cu src/cuda/rho2d_kernel.cu
     CXXFLAGS += -DUSE_CUDA
-    CUDA_LFLAGS := 
+    CUDA_LFLAGS :=
 else
     CUDA_SOURCES :=
 endif
 
 # Additional OpenMP flags
-ifeq ($(USE_OMP),1)
-    CXXFLAGS += -DUSE_OMP -fopenmp
+ifeq ($(USE_OPENMP),1)
+    CXXFLAGS += -DUSE_OPENMP -fopenmp
     LFLAGS   += -fopenmp
 endif
 
@@ -76,7 +76,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp | $(OBJDIR)
 
 # Compile CUDA with nvcc
 $(OBJDIR)/%.cu.o: src/cuda/%.cu | $(OBJDIR)
-	$(NVCC) $(NVCCFLAGS) $(NVCC_ARCH_FLAGS) -std=c++11 -O3 -DUSE_CUDA -c $< -o $@
+	$(NVCC) $(NVCCFLAGS) $(NVCC_ARCH_FLAGS) -c $< -o $@
 
 
 clean:
