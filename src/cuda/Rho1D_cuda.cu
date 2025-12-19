@@ -41,6 +41,7 @@ void Rho1D::computeRhoCUDA(const std::vector<double>& projBase) {
   cudaError_t err = cudaGetLastError();
   if (err != cudaSuccess) {
     printf("CUDA kernel launch error: %s\n", cudaGetErrorString(err));
+    std::abort();
   }
 
   cudaDeviceSynchronize();
@@ -48,6 +49,7 @@ void Rho1D::computeRhoCUDA(const std::vector<double>& projBase) {
   err = cudaGetLastError();
   if (err != cudaSuccess) {
     printf("CUDA kernel runtime error: %s\n", cudaGetErrorString(err));
+    std::abort();
   }
 
   std::vector<cuDoubleComplex> tmp(M);
