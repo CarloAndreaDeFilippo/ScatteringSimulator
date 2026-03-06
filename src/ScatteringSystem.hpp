@@ -13,9 +13,10 @@ class ScatteringSystem {
  public:
   ScattType scattType = ScattType::Sq;
 
-  double rhoSP = 1.;                              // Density of scattering points
-  size_t NSP = 0;                                 // Number of scattering points
-  std::vector<ScatteringPoint> scatteringPoints;  // Total ensemble of scattering points
+  double rhoSP = 1.;  // Density of scattering points
+  size_t NSP = 0;     // Number of scattering points
+  std::vector<ScatteringPoint>
+      scatteringPoints;  // Total ensemble of scattering points
 
   std::vector<Rho1D> vecRho1D;
   std::vector<Rho2D> vecRho2D;
@@ -27,6 +28,8 @@ class ScatteringSystem {
       : scattType(sType), rhoSP(rho) {}
 
   //* Functions
-  void generateScatteringPoints(const std::vector<Particle>& particles);
-  void cogli2(const std::array<double, 3>& Lbox, const std::string& filename, const bool append);
+  void generateScatteringPoints(const std::vector<Particle>& particles,
+                                const std::array<double, 3>& Lbox);
+  void cogli2(const std::array<double, 3>& Lbox, const std::string& filename,
+              const bool append);
 };

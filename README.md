@@ -1,8 +1,6 @@
 # ScatteringSimulator
 
-C++11 program for simulating scattering in a system of particles with different shapes, parallelized with OpenMP.
-
-> **Experimental CUDA support** is available for accelerating the computation of the scattering density on NVIDIA GPUs. The CUDA backend is optional, disabled by default, and currently considered experimental.
+C++11 program for simulating scattering in a system of particles with different shapes, parallelized with OpenMP or CUDA.
 
 ## Theoretical background
 
@@ -22,49 +20,48 @@ Currently, only Linux is supported.
 
 ### Requirements
 
-* C++11 compiler (g++)
-* An OpenMP-enabled compiler is not required. OpenMP is enabled by default, but you can disable it at compile time if needed.
-* (Optional, experimental) NVIDIA GPU with CUDA support, NVIDIA CUDA Toolkit (for `nvcc`, required only when explicitly building with `USE_CUDA=1`).
+* CMake 3.18+
+* C++11 compiler
+* OpenMP: optional for parallel computing on CPU
+* CUDA: optional for parallel computing on NVIDIA GPU
 
 ### Building
 
-In the project directory:
+Building the project using CMake:
 
 ```
 cd ScatteringSimulator
-```
-
-Build with OpenMP (default):
-
-```
+mkdir build && cd build
+cmake ..
 make -j
 ```
 
-Build without OpenMP:
+#### CMake options
 
-```
-make USE_OMP=0 -j
-```
+| Option | Description | Default value |
+| :---         |     :---      |          :--- |
+| ```-DUSE_OPENMP=ON```   | Enable CPU parallelization     | ```OFF```    |
+| ```-DUSE_CUDA=ON```     | Enable GPU parallelization (NVIDIA)       | ```OFF```      |
+| ```-DCMAKE_BUILD_TYPE=Debug```     | Choose Debug build       | ```Release```      |
 
-Building with CUDA (experimental):
-
-```
-make USE_CUDA=1 -j
-```
+> NB: If CUDA compiler is not automatically found by CMake, it is possible to specify its location with -DUSE_CUDA=ON -DCMAKE_CUDA_COMPILER=COMPILER_PATH and -DCMAKE_CUDA_HOST_COMPILER=HOST_COMPILER_PATH (e.g. /usr/local/cuda-11.8/bin/nvcc and /usr/bin/g++-11, respectively).
 
 ### Usage
 
 To run the program once built:
 
 ```
-./scatteringSimulator.out SETTINGS_FILE
+./scatteringSimulator SETTINGS_FILE
 ```
 
 If OpenMP is enabled, you can select the number of threads at runtime:
 
 ```
-OMP_NUM_THREADS=NUMBER_OF_THREADS ./scatteringSimulator.out SETTINGS_FILE
+OMP_NUM_THREADS=NUMBER_OF_THREADS ./scatteringSimulator SETTINGS_FILE
 ```
+
+> If the project is built with USE_CUDA=ON, the program will use the GPU regardless of the USE_OPENMP setting.
+
 
 ## Documentation
 
@@ -72,17 +69,7 @@ The code takes two input files: the particle configuration (shapes and positions
 
 ### Particle configuration file
 
-The first row of the input file contains the box dimensions $(Lx, Ly, Lz)$, e.g. ```50 50 50```. Each subsequent row represents a particle in the system.
-
-The following particle shapes are supported:
-* Sphere
-* Cylinder
-* Spherocylinder (or capsule)
-* Box
-* Ellipsoid
-* Superquadric
-
-Each line has the following structure:
+The first row of the input file contains the box dimensions $(Lx, Ly, Lz)$, e.g. ```50 50 50```. Each subsequent row represents a particle in the system, which has the following structure:
 
 ```
 SHAPE_NAME SHAPE_ATTRIBUTES x y z Rxx Rxy Rxz Ryx Ryy Ryz Rzx Rzy Rzz
@@ -93,48 +80,20 @@ where
 * $(x, y, z)$ is the center of mass
 * $R$ is the rotation matrix of the particle that describes its orientation.
 
+#### Particle geometries
+
+| Shape | Name | Shape attributes |
+| :--- | :--- | :--- |
+| Sphere | `SPH` | `D` (diameter) |
+| Cylinder | `CYL` | `D` (diameter), `L` (length) |
+| Spherocylinder | `SPHCYL` | `D` (diameter), `L` (length of cylinder) |
+| Box | `BOX` | `a` `b` `c` (axes) |
+| Ellipsoid | `ELL` | `s_a` `s_b` `s_c` (semiaxes) |
+| Superquadric | `SQUAD` | `sa, sb, sc` (semiaxes), `r, s, t` (exponents) |
+
 The `docs` folder contains an example configuration with all available particle types:
 
 <img src="/docs/particleShapesExample.png" width=50% height=50%>
-
-Below are the shape names and their attributes for all available shapes.
-
-#### Sphere
-```
-SPH D
-```
-where $D$ is the diameter of the sphere.
-
-#### Cylinder
-```
-CYL D L
-```
-where $D$ is the diameter of the cylinder and $L$ is its length.
-
-#### Spherocylinder
-```
-SPHCYL D L
-```
-where $D$ is the diameter of the cylinder and $L$ is its length. The total length of the spherocylinder is $L + D$.
-
-#### Box
-```
-BOX a b c
-```
-where $(a, b, c)$ are the three axes of the box.
-
-#### Ellipsoid
-```
-ELL s_a s_b s_c
-```
-where $(s_a, s_b, s_c)$ are the three semiaxes of the ellipsoid.
-
-#### Superquadric
-```
-SQUAD s_a s_b s_c r s t
-```
-where $(s_a, s_b, s_c)$ are the three semiaxes of the superquadric, and $(r, s, t)$ are the exponents that define the superquadric:
-$$\left|\frac{x}{s_a} \right|^r + \left|\frac{y}{s_b} \right|^s + \left|\frac{z}{s_c} \right|^t = 1 $$
 
 ### Simulation configuration file
 

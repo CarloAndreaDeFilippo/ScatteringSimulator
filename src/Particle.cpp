@@ -2,14 +2,22 @@
 
 #include <string>
 
-std::vector<ScatteringPoint> Particle::generateScatteringPoints(double rhoSP) const {
-  std::vector<ScatteringPoint> sPoints = particleShape->generateScatteringPoints(rhoSP);
+std::vector<ScatteringPoint> Particle::generateScatteringPoints(
+    double rhoSP, const std::array<double, 3>& Lbox) const {
+  std::vector<ScatteringPoint> sPoints =
+      particleShape->generateScatteringPoints(rhoSP);
 
   for (auto& sp : sPoints) {
     std::array<double, 3> new_pos = {0., 0., 0.};
 
     for (int ax = 0; ax < 3; ax++) {
-      new_pos[ax] = tf.R[0][ax] * sp.cm[0] + tf.R[1][ax] * sp.cm[1] + tf.R[2][ax] * sp.cm[2] + tf.cm[ax];
+      new_pos[ax] = tf.R[0][ax] * sp.cm[0] + tf.R[1][ax] * sp.cm[1] +
+                    tf.R[2][ax] * sp.cm[2] + tf.cm[ax];
+    }
+
+    // Apply PBC
+    for (int ax = 0; ax < 3; ax++) {
+      new_pos[ax] -= Lbox[ax] * rint(new_pos[ax] / Lbox[ax]);
     }
 
     sp.cm = new_pos;

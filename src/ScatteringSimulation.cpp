@@ -9,7 +9,8 @@
 #include "ScatteringSystem.hpp"
 
 void ScatteringSimulation::startSimulation() {
-  std::cout << "#Total configurations: " << simSettings.configurationFiles.size() << "\n";
+  std::cout << "#Total configurations: "
+            << simSettings.configurationFiles.size() << "\n";
 
   // Loop over the configurations
   for (const auto& configuration : simSettings.configurationFiles) {
@@ -26,10 +27,11 @@ void ScatteringSimulation::startSimulation() {
 
     ScatteringSystem scattSys(simSettings.scattType, simSettings.rhoSP);
 
-    scattSys.generateScatteringPoints(partSys.particles);
+    scattSys.generateScatteringPoints(partSys.particles, partSys.Lbox);
 
     if (simSettings.saveCogli2 == true) {
-      std::string outputCogli2 = simSettings.cogli2Folder + confNameNoExtension + ".mgl";
+      std::string outputCogli2 =
+          simSettings.cogli2Folder + confNameNoExtension + ".mgl";
       cogli2::box(partSys.Lbox, outputCogli2);
       scattSys.cogli2(partSys.Lbox, outputCogli2, true);
     }
@@ -42,7 +44,8 @@ void ScatteringSimulation::startSimulation() {
 
     // Rho1D
 
-    std::string rho1DFolderConfig = simSettings.outputFolderRho1D + confNameNoExtension + "/";
+    std::string rho1DFolderConfig =
+        simSettings.outputFolderRho1D + confNameNoExtension + "/";
 
     if (simSettings.scattVectors.size() > 0) {
       if (!directoryExists(rho1DFolderConfig))
@@ -58,13 +61,15 @@ void ScatteringSimulation::startSimulation() {
 
       rho1d.calculateRho(scattSys.scatteringPoints);
 
-      std::string outFile = rho1DFolderConfig + "axis_" + std::to_string(vec) + ".txt";
+      std::string outFile =
+          rho1DFolderConfig + "axis_" + std::to_string(vec) + ".txt";
       rho1d.exportData(scattSys.NSP, outFile);
     }
 
     // Rho2D
 
-    std::string rho2DFolderConfig = simSettings.outputFolderRho2D + confNameNoExtension + "/";
+    std::string rho2DFolderConfig =
+        simSettings.outputFolderRho2D + confNameNoExtension + "/";
 
     if (simSettings.scattPlanes.size() > 0) {
       if (!directoryExists(rho2DFolderConfig))
@@ -80,7 +85,8 @@ void ScatteringSimulation::startSimulation() {
 
       rho2d.calculateRho(scattSys.scatteringPoints);
 
-      std::string outFile = rho2DFolderConfig + "plane_" + std::to_string(pl) + ".txt";
+      std::string outFile =
+          rho2DFolderConfig + "plane_" + std::to_string(pl) + ".txt";
       rho2d.exportData(scattSys.NSP, outFile);
     }
   }
