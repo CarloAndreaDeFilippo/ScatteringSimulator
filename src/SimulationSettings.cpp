@@ -55,8 +55,7 @@ void SimulationSettings::loadSettings(const std::string& settingsFile) {
   }
 
   // Mesh density
-  if (settings.contains("rhoSP"))
-    rhoSP = settings.at("rhoSP").get<double>();
+  if (settings.contains("rhoSP")) rhoSP = settings.at("rhoSP").get<double>();
 
   // Configurations folder and files
   try {
@@ -68,7 +67,8 @@ void SimulationSettings::loadSettings(const std::string& settingsFile) {
     configurationFiles = listFilesInDir(configurationFolder);
 
     if (configurationFiles.size() == 0) {
-      throw std::runtime_error("No configuration files found in " + configurationFolder);
+      throw std::runtime_error("No configuration files found in " +
+                               configurationFolder);
     }
 
   } catch (const std::exception& e) {
@@ -82,28 +82,26 @@ void SimulationSettings::loadSettings(const std::string& settingsFile) {
     outputFolder = settings["outputFolder"];
   }
 
-  if (!directoryExists(outputFolder))
-    makeDirectoryRecursive(outputFolder);
+  if (!directoryExists(outputFolder)) makeDirectory(outputFolder);
 
   if (settings.contains("scattVectors")) {
     outputFolderRho1D = outputFolder + "rho1D/";
-    if (!directoryExists(outputFolderRho1D))
-      makeDirectoryRecursive(outputFolderRho1D);
+    if (!directoryExists(outputFolderRho1D)) makeDirectory(outputFolderRho1D);
   }
 
   if (settings.contains("scattPlanes")) {
     outputFolderRho2D = outputFolder + "rho2D/";
-    if (!directoryExists(outputFolderRho2D))
-      makeDirectoryRecursive(outputFolderRho2D);
+    if (!directoryExists(outputFolderRho2D)) makeDirectory(outputFolderRho2D);
   }
 
   // Cogli2 output
-  if (settings.contains("saveCogli2") && settings["saveCogli2"].get<bool>() == true) {
+  if (settings.contains("saveCogli2") &&
+      settings["saveCogli2"].get<bool>() == true) {
     saveCogli2 = true;
 
-    if (settings.contains("cogli2Folder")) cogli2Folder = settings["cogli2Folder"];
+    if (settings.contains("cogli2Folder"))
+      cogli2Folder = settings["cogli2Folder"];
 
-    if (!directoryExists(cogli2Folder))
-      makeDirectoryRecursive(cogli2Folder);
+    if (!directoryExists(cogli2Folder)) makeDirectory(cogli2Folder);
   }
 }

@@ -1,12 +1,14 @@
 #include "ScatteringSimulation.hpp"
 
 #include <array>
+#include <boost/filesystem.hpp>
 #include <fstream>
 #include <iostream>
 
 #include "Cogli2.hpp"
 #include "ParticleSystem.hpp"
 #include "ScatteringSystem.hpp"
+namespace fs = boost::filesystem;
 
 void ScatteringSimulation::startSimulation() {
   std::cout << "#Total configurations: "
@@ -14,13 +16,13 @@ void ScatteringSimulation::startSimulation() {
 
   // Loop over the configurations
   for (const auto& configuration : simSettings.configurationFiles) {
-    std::string confName = configuration;
+    fs::path confName(configuration);
     std::cout << "Configuration " << confName << "\n";
 
-    size_t lastindex = confName.find_last_of('.');
-    std::string confNameNoExtension = confName.substr(0, lastindex);
+    std::string confNameNoExtension = confName.stem().string();
 
-    std::string particlesFile = simSettings.configurationFolder + confName;
+    std::string particlesFile =
+        (fs::path(simSettings.configurationFolder) / confName).string();
 
     //  Load particles and initialize the system
     ParticleSystem partSys(particlesFile);
@@ -48,8 +50,7 @@ void ScatteringSimulation::startSimulation() {
         simSettings.outputFolderRho1D + confNameNoExtension + "/";
 
     if (simSettings.scattVectors.size() > 0) {
-      if (!directoryExists(rho1DFolderConfig))
-        makeDirectoryRecursive(rho1DFolderConfig);
+      if (!directoryExists(rho1DFolderConfig)) makeDirectory(rho1DFolderConfig);
     }
 
     // Initialize Rho1D
@@ -72,8 +73,7 @@ void ScatteringSimulation::startSimulation() {
         simSettings.outputFolderRho2D + confNameNoExtension + "/";
 
     if (simSettings.scattPlanes.size() > 0) {
-      if (!directoryExists(rho2DFolderConfig))
-        makeDirectoryRecursive(rho2DFolderConfig);
+      if (!directoryExists(rho2DFolderConfig)) makeDirectory(rho2DFolderConfig);
     }
 
     // Initialize Rho2D

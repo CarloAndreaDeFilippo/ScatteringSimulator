@@ -5,6 +5,8 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type")
 endif()
 
+find_package(Boost REQUIRED COMPONENTS filesystem system)
+
 option(USE_OPENMP "Enable OpenMP support" OFF)
 option(USE_CUDA "Enable CUDA support" OFF)
 
@@ -55,6 +57,10 @@ if(USE_CUDA)
     )
 endif()
 
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    Boost::filesystem
+    Boost::system
+)
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src

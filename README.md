@@ -22,6 +22,7 @@ Currently, only Linux is supported.
 
 * CMake 3.18+
 * C++11 compiler
+* Boost Libraries: specifically boost::filesystem and boost::system
 * OpenMP: optional for parallel computing on CPU
 * CUDA: optional for parallel computing on NVIDIA GPU
 
