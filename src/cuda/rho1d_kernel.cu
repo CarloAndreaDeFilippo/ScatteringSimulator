@@ -17,7 +17,9 @@ __global__ void rho1D_kernel_add(const double* proj, size_t N,
 
   for (size_t i = 0; i < N; ++i) {
     double phase = proj[i] * q;
-    sum = cuCadd(sum, make_cuDoubleComplex(cos(phase), -sin(phase)));
+    double sPhase, cPhase;
+    sincos(phase, &sPhase, &cPhase);
+    sum = cuCadd(sum, make_cuDoubleComplex(sPhase, -cPhase));
   }
 
   rho[qq] = cuCadd(rho[qq], sum);

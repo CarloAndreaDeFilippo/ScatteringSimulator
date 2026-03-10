@@ -1,7 +1,8 @@
 #include <cuComplex.h>
 #include <math.h>
 
-extern "C" __global__ void rho2D_kernel_add(const double* proj1, const double* proj2, size_t N,
+extern "C" __global__ void rho2D_kernel_add(const double* proj1,
+                                            const double* proj2, size_t N,
                                             const double* q1vals, size_t M1,
                                             const double* q2vals, size_t M2,
                                             cuDoubleComplex* pos_pos,
@@ -24,8 +25,11 @@ extern "C" __global__ void rho2D_kernel_add(const double* proj1, const double* p
     double anglePP = phase1 + phase2;
     double anglePN = phase1 - phase2;
 
-    sumPP = cuCadd(sumPP, make_cuDoubleComplex(cos(anglePP), -sin(anglePP)));
-    sumPN = cuCadd(sumPN, make_cuDoubleComplex(cos(anglePN), -sin(anglePN)));
+    double sPP, cPP, sPN, cPN;
+    sincos(anglePP, &sPP, &cPP);
+    sincos(anglePN, &sPN, &cPN);
+    sumPP = cuCadd(sumPP, make_cuDoubleComplex(cPP, -sPP));
+    sumPN = cuCadd(sumPN, make_cuDoubleComplex(cPN, -sPN));
   }
 
   int idx = qq1 * M2 + qq2;
