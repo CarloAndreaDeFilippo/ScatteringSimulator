@@ -1,9 +1,0 @@
-{
-    "version": 3,
-    "registries": [
-        {
-            "kind": "builtin",
-            "baseline": "a1aba31e33e42d84d971cffabdc1a38e2d7a14a9"
-        }
-    ]
-}
