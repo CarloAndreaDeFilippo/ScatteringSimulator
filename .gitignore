@@ -13,6 +13,9 @@ build/
 #vscode settings
 .vscode
 
+#Visual Studio
+.vs
+
 #Cogli2 folder
 cogli2/
 

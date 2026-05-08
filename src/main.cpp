@@ -14,5 +14,5 @@ int main(int argc, char** argv) {
   // Perform simulation
   scattSim.startSimulation();
 
-  return 0.;
+  return 0;
 }

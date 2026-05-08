@@ -9,6 +9,10 @@
 #include "ScatteringVector.hpp"
 #include "mathTools.hpp"
 
+#ifdef USE_CUDA
+class GPUMemoryManager;
+#endif
+
 class Rho1D {
  public:
   ScatteringVector qVector;
@@ -20,10 +24,12 @@ class Rho1D {
   Rho1D(const ScatteringVector& scattVec)
       : qVector(scattVec), rho(scattVec.qqmax, 0.0) {}
 
-  void calculateRho(const std::vector<ScatteringPoint>& scatteringPoints);
+  void calculateRhoCPU(const std::vector<ScatteringPoint>& scatteringPoints);
 
-  void computeRhoCPU(const std::vector<double>& projBase);
-  void computeRhoCUDA(const std::vector<double>& projBase);
+#ifdef USE_CUDA
+  void calculateRhoGPU(const GPUMemoryManager& gpuMemory);
+
+#endif
 
   void exportData(const size_t NSP, const std::string& filename);
 };

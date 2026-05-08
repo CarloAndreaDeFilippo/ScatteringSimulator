@@ -6,7 +6,8 @@
 #include "ProgressBar.hpp"
 #include "mathTools.hpp"
 
-void Rho2D::calculateRho(const std::vector<ScatteringPoint>& scatteringPoints) {
+void Rho2D::calculateRhoCPU(
+    const std::vector<ScatteringPoint>& scatteringPoints) {
   std::complex<double> im(0.0, 1.0);  // definition of i
 
   auto& q1Vec = qPlane.q1Vector;
@@ -30,21 +31,10 @@ void Rho2D::calculateRho(const std::vector<ScatteringPoint>& scatteringPoints) {
     projBase2[i] = dotProduct(q2Vec.qAxis, scatteringPoints[i].cm);
   }
 
-#ifdef USE_CUDA
-  computeRhoCUDA(projBase1, projBase2);
-#else
-  computeRhoCPU(projBase1, projBase2);
-#endif
-}
-
-void Rho2D::computeRhoCPU(const std::vector<double>& projBase1, const std::vector<double>& projBase2) {
-  auto& q1Vec = qPlane.q1Vector;
-  auto& q2Vec = qPlane.q2Vector;
-
 #ifdef USE_OPENMP
 #pragma omp parallel for
 #endif
-  for (size_t qq1 = 0; qq1 < q1Vec.qqmax; ++qq1) {
+  for (long long qq1 = 0; qq1 < q1Vec.qqmax; ++qq1) {
     double q1Module = q1Vec.qValues[qq1];
     for (size_t qq2 = 0; qq2 < q2Vec.qqmax; ++qq2) {
       double q2Module = q2Vec.qValues[qq2];
@@ -98,7 +88,8 @@ void Rho2D::exportData(const size_t NSP, const std::string& filename) {
       double q2 = q2Vec.qValues[qq2];
 
       file_out << q1 << " " << q2 << " "
-               << std::norm(pos_pos[qq1][qq2]) / static_cast<double>(NSP) << "\n";
+               << std::norm(pos_pos[qq1][qq2]) / static_cast<double>(NSP)
+               << "\n";
     }
 
     file_out << "\n";
@@ -112,8 +103,7 @@ void Rho2D::exportData(const size_t NSP, const std::string& filename) {
       double q2 = -q2Vec.qValues[qq2];
 
       file_out << q1 << " " << q2 << " "
-               << std::norm(pos_neg[qq1][qq2]) /
-                      static_cast<double>(NSP)
+               << std::norm(pos_neg[qq1][qq2]) / static_cast<double>(NSP)
                << "\n";
     }
 

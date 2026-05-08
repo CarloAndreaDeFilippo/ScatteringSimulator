@@ -2,9 +2,12 @@
 
 #include <fstream>
 #include <iostream>
+#include <boost/filesystem.hpp>
 
 #include "Utilities.hpp"
 #include "mathTools.hpp"
+
+namespace fs = boost::filesystem;
 
 void SimulationSettings::loadSettings(const std::string& settingsFile) {
   std::ifstream file(settingsFile);
@@ -85,12 +88,12 @@ void SimulationSettings::loadSettings(const std::string& settingsFile) {
   if (!directoryExists(outputFolder)) makeDirectory(outputFolder);
 
   if (settings.contains("scattVectors")) {
-    outputFolderRho1D = outputFolder + "rho1D/";
+    outputFolderRho1D = (fs::path(outputFolder) / "rho1D").string();
     if (!directoryExists(outputFolderRho1D)) makeDirectory(outputFolderRho1D);
   }
 
   if (settings.contains("scattPlanes")) {
-    outputFolderRho2D = outputFolder + "rho2D/";
+    outputFolderRho2D = (fs::path(outputFolder) / "rho2D").string();
     if (!directoryExists(outputFolderRho2D)) makeDirectory(outputFolderRho2D);
   }
 

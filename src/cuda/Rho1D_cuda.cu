@@ -5,61 +5,80 @@
 #include <vector>
 
 #include "../Rho1D.hpp"
+#include "GPUMemoryManager.hpp"
 
-extern "C" __global__ void rho1D_kernel_add(const double*, size_t,
-                                            const double*, size_t,
-                                            cuDoubleComplex*);
+extern "C" __global__ void compute_projection_1d_kernel(const double* centers,
+                                                        const double* q_axis,
+                                                        size_t N,
+                                                        double* projections);
 
-void Rho1D::computeRhoCUDA(const std::vector<double>& projBase) {
-  size_t N = projBase.size();
-  size_t M = qVector.qqmax;
+extern "C" __global__ void rho1D_kernel(const double* proj, size_t N,
+                                        const double* qvals, size_t M,
+                                        cuDoubleComplex* rho);
 
-  if (M == 0 || N == 0) return;
+void Rho1D::calculateRhoGPU(const GPUMemoryManager& gpuMemory) {
+  size_t nSP = gpuMemory.getNumScatteringPoints();
 
-  double *d_proj = nullptr, *d_qvals = nullptr;
-  cuDoubleComplex* d_rho = nullptr;
+  // Allocate GPU projections
+  double* d_projections;
+  cudaMalloc(&d_projections, nSP * sizeof(double));
 
-  cudaMalloc(&d_proj, N * sizeof(double));
-  cudaMalloc(&d_qvals, M * sizeof(double));
-  cudaMalloc(&d_rho, M * sizeof(cuDoubleComplex));
-
-  cudaMemcpy(d_proj, projBase.data(), N * sizeof(double),
+  // Upload q-axis to GPU
+  double* d_qAxis;
+  cudaMalloc(&d_qAxis, 3 * sizeof(double));
+  cudaMemcpy(d_qAxis, qVector.qAxis.data(), 3 * sizeof(double),
              cudaMemcpyHostToDevice);
 
-  cudaMemcpy(d_qvals, qVector.qValues.data(),
-             M * sizeof(double), cudaMemcpyHostToDevice);
+  // Compute projections on GPU
+  dim3 block(256);
+  dim3 gridProjection((nSP + 255) / 256);
 
-  // Copy rho (current accumulated values)
-  cudaMemcpy(d_rho, rho.data(), M * sizeof(cuDoubleComplex),
+  compute_projection_1d_kernel<<<gridProjection, block>>>(
+      gpuMemory.getDeviceScatteringCenters(), d_qAxis, nSP, d_projections);
+
+  size_t M = qVector.qqmax;
+
+  // Upload q-values
+  double* d_qvals;
+  cudaMalloc(&d_qvals, M * sizeof(double));
+  cudaMemcpy(d_qvals, qVector.qValues.data(), M * sizeof(double),
+             cudaMemcpyHostToDevice);
+
+  // Upload current rho values
+  cuDoubleComplex* d_rho;
+  cudaMalloc(&d_rho, M * sizeof(cuDoubleComplex));
+
+  std::vector<cuDoubleComplex> h_rho(M);
+  for (size_t i = 0; i < M; ++i) {
+    h_rho[i] = make_cuDoubleComplex(rho[i].real(), rho[i].imag());
+  }
+  cudaMemcpy(d_rho, h_rho.data(), M * sizeof(cuDoubleComplex),
              cudaMemcpyHostToDevice);
 
   int blockSize = 256;
-  int gridSize = (M + blockSize - 1) / blockSize;
 
-  rho1D_kernel_add<<<gridSize, blockSize>>>(d_proj, N, d_qvals, M, d_rho);
+  // X dimension covers all SP
+  int gridX = (nSP + blockSize - 1) / blockSize;
 
-  cudaError_t err = cudaGetLastError();
-  if (err != cudaSuccess) {
-    printf("CUDA kernel launch error: %s\n", cudaGetErrorString(err));
-    std::abort();
-  }
+  // Y dimension covers all M q-values
+  int gridY = M;
 
-  cudaDeviceSynchronize();
+  dim3 grid(gridX, gridY);
 
-  err = cudaGetLastError();
-  if (err != cudaSuccess) {
-    printf("CUDA kernel runtime error: %s\n", cudaGetErrorString(err));
-    std::abort();
-  }
+  rho1D_kernel<<<grid, blockSize>>>(d_projections, nSP, d_qvals, M, d_rho);
 
-  std::vector<cuDoubleComplex> tmp(M);
-  cudaMemcpy(tmp.data(), d_rho, M * sizeof(cuDoubleComplex),
+  // Copy back results
+  cudaMemcpy(h_rho.data(), d_rho, M * sizeof(cuDoubleComplex),
              cudaMemcpyDeviceToHost);
 
-  for (size_t j = 0; j < M; ++j)
-    rho[j] = std::complex<double>(cuCreal(tmp[j]), cuCimag(tmp[j]));
+  for (size_t i = 0; i < M; ++i) {
+    rho[i] = std::complex<double>(cuCreal(h_rho[i]), cuCimag(h_rho[i]));
+  }
 
-  cudaFree(d_proj);
+  // Cleanup
+
   cudaFree(d_qvals);
   cudaFree(d_rho);
+  cudaFree(d_projections);
+  cudaFree(d_qAxis);
 }

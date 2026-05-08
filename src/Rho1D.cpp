@@ -2,7 +2,8 @@
 
 #include "ProgressBar.hpp"
 
-void Rho1D::calculateRho(const std::vector<ScatteringPoint>& scatteringPoints) {
+void Rho1D::calculateRhoCPU(
+    const std::vector<ScatteringPoint>& scatteringPoints) {
   //? Fix or remove the progressbar?
   /*ProgressBar pbar;
 
@@ -18,18 +19,10 @@ void Rho1D::calculateRho(const std::vector<ScatteringPoint>& scatteringPoints) {
     projBase[i] = dotProduct(qVector.qAxis, scatteringPoints[i].cm);
   }
 
-#ifdef USE_CUDA
-  computeRhoCUDA(projBase);
-#else
-  computeRhoCPU(projBase);
-#endif
-}
-
-void Rho1D::computeRhoCPU(const std::vector<double>& projBase) {
 #ifdef USE_OPENMP
 #pragma omp parallel for
 #endif
-  for (size_t qq = 0; qq < qVector.qqmax; ++qq) {
+  for (long long qq = 0; qq < qVector.qqmax; ++qq) {
     double qModule = qVector.qValues[qq];
 
     double sum_re = 0.0;
@@ -64,6 +57,7 @@ void Rho1D::exportData(const size_t NSP, const std::string& filename) {
   for (size_t qq = 0; qq < qVector.qqmax; ++qq) {
     double q = qVector.qValues[qq];
 
-    file_out << q << " " << std::norm(rho[qq]) / static_cast<double>(NSP) << "\n";
+    file_out << q << " " << std::norm(rho[qq]) / static_cast<double>(NSP)
+             << "\n";
   }
 }

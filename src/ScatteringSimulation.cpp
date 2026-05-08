@@ -8,6 +8,11 @@
 #include "Cogli2.hpp"
 #include "ParticleSystem.hpp"
 #include "ScatteringSystem.hpp"
+
+#ifdef USE_CUDA
+#include "cuda/GPUMemoryManager.hpp"
+#endif
+
 namespace fs = boost::filesystem;
 
 void ScatteringSimulation::startSimulation() {
@@ -17,12 +22,13 @@ void ScatteringSimulation::startSimulation() {
   // Loop over the configurations
   for (const auto& configuration : simSettings.configurationFiles) {
     fs::path confName(configuration);
-    std::cout << "Configuration " << confName << "\n";
+    std::cout << "Configuration " << confName.string() << "\n";
 
     std::string confNameNoExtension = confName.stem().string();
 
-    std::string particlesFile =
-        (fs::path(simSettings.configurationFolder) / confName).string();
+    fs::path particlesFilePath =
+        fs::path(simSettings.configurationFolder) / confName.filename();
+    std::string particlesFile = particlesFilePath.string();
 
     //  Load particles and initialize the system
     ParticleSystem partSys(particlesFile);
@@ -32,11 +38,21 @@ void ScatteringSimulation::startSimulation() {
     scattSys.generateScatteringPoints(partSys.particles, partSys.Lbox);
 
     if (simSettings.saveCogli2 == true) {
-      std::string outputCogli2 =
-          simSettings.cogli2Folder + confNameNoExtension + ".mgl";
+      fs::path outputCogli2Path =
+          fs::path(simSettings.cogli2Folder) / (confNameNoExtension + ".mgl");
+      std::string outputCogli2 = outputCogli2Path.string();
       cogli2::box(partSys.Lbox, outputCogli2);
       scattSys.cogli2(partSys.Lbox, outputCogli2, true);
     }
+
+#ifdef USE_CUDA
+    // Uploading scattering points to GPU
+    GPUMemoryManager gpuMemory;
+
+    gpuMemory.uploadScatteringPoints(scattSys.scatteringPoints);
+    std::cout << "Uploaded " << gpuMemory.getNumScatteringPoints()
+              << " scattering points to GPU" << std::endl;
+#endif
 
     // TODO: logscale support
 
@@ -46,11 +62,11 @@ void ScatteringSimulation::startSimulation() {
 
     // Rho1D
 
-    std::string rho1DFolderConfig =
-        simSettings.outputFolderRho1D + confNameNoExtension + "/";
+    fs::path rho1DFolderPath =
+        fs::path(simSettings.outputFolderRho1D) / confNameNoExtension;
 
-    if (simSettings.scattVectors.size() > 0) {
-      if (!directoryExists(rho1DFolderConfig)) makeDirectory(rho1DFolderConfig);
+    if (!simSettings.scattVectors.empty()) {
+      if (!fs::exists(rho1DFolderPath)) fs::create_directories(rho1DFolderPath);
     }
 
     // Initialize Rho1D
@@ -60,20 +76,24 @@ void ScatteringSimulation::startSimulation() {
     for (size_t vec = 0; vec < scattSys.vecRho1D.size(); ++vec) {
       auto& rho1d = scattSys.vecRho1D[vec];
 
-      rho1d.calculateRho(scattSys.scatteringPoints);
+#ifdef USE_CUDA
+      rho1d.calculateRhoGPU(gpuMemory);  // Pass GPU memory manager
+#else
+      rho1d.calculateRhoCPU(scattSys.scatteringPoints);
+#endif
 
-      std::string outFile =
-          rho1DFolderConfig + "axis_" + std::to_string(vec) + ".txt";
-      rho1d.exportData(scattSys.NSP, outFile);
+      fs::path outFilePath =
+          rho1DFolderPath / ("axis_" + std::to_string(vec) + ".txt");
+      rho1d.exportData(scattSys.NSP, outFilePath.string());
     }
 
     // Rho2D
 
-    std::string rho2DFolderConfig =
-        simSettings.outputFolderRho2D + confNameNoExtension + "/";
+    fs::path rho2DFolderPath =
+        fs::path(simSettings.outputFolderRho2D) / confNameNoExtension;
 
-    if (simSettings.scattPlanes.size() > 0) {
-      if (!directoryExists(rho2DFolderConfig)) makeDirectory(rho2DFolderConfig);
+    if (!simSettings.scattPlanes.empty()) {
+      if (!fs::exists(rho2DFolderPath)) fs::create_directories(rho2DFolderPath);
     }
 
     // Initialize Rho2D
@@ -83,11 +103,15 @@ void ScatteringSimulation::startSimulation() {
     for (size_t pl = 0; pl < scattSys.vecRho2D.size(); ++pl) {
       auto& rho2d = scattSys.vecRho2D[pl];
 
-      rho2d.calculateRho(scattSys.scatteringPoints);
+#ifdef USE_CUDA
+      rho2d.calculateRhoGPU(gpuMemory);  // Pass GPU memory manager
+#else
+      rho2d.calculateRhoCPU(scattSys.scatteringPoints);
+#endif
 
-      std::string outFile =
-          rho2DFolderConfig + "plane_" + std::to_string(pl) + ".txt";
-      rho2d.exportData(scattSys.NSP, outFile);
+      fs::path outFilePath =
+          rho2DFolderPath / ("plane_" + std::to_string(pl) + ".txt");
+      rho2d.exportData(scattSys.NSP, outFilePath.string());
     }
   }
 }

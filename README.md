@@ -16,50 +16,69 @@ where $\vec{r}_i$ is the position of the scattering points.
 
 ## Installation
 
-Currently, only Linux is supported.
+Supported on Linux and Windows.
 
 ### Requirements
 
 * CMake 3.18+
 * C++11 compiler
+* vcpkg: Used for managing C++ libraries. Ensure the ```VCPKG_ROOT``` environment variable is set to your vcpkg installation directory.
+
+### Dependencies
+
+The following libraries are required and will be automatically managed by vcpkg:
 * Boost Libraries: specifically boost::filesystem and boost::system
 * OpenMP: optional for parallel computing on CPU
 * CUDA: optional for parallel computing on NVIDIA GPU
 
 ### Building
 
-Building the project using CMake:
+Building the project using CMake and presets:
+
+#### Linux
 
 ```
-cd ScatteringSimulator
-mkdir build && cd build
-cmake ..
-make -j
+cmake --preset linux
+cmake --build build -j
 ```
+
+#### Windows
+
+```
+cmake --preset windows
+cmake --build build --config Release -j
+```
+
+> NB: the presets have Visual Studio 18 2026 as generator, it is possible to change it with the CMake -G flag (e.g. Visual Studio 17 2022).
 
 #### CMake options
 
-| Option | Description | Default value |
-| :---         |     :---      |          :--- |
-| ```-DUSE_OPENMP=ON```   | Enable CPU parallelization     | ```OFF```    |
-| ```-DUSE_CUDA=ON```     | Enable GPU parallelization (NVIDIA)       | ```OFF```      |
-| ```-DCMAKE_BUILD_TYPE=Debug```     | Choose Debug build       | ```Release```      |
+It is possible to enable OpenMP and CUDA during preset choice:
 
-> NB: If CUDA compiler is not automatically found by CMake, it is possible to specify its location with -DUSE_CUDA=ON -DCMAKE_CUDA_COMPILER=COMPILER_PATH and -DCMAKE_CUDA_HOST_COMPILER=HOST_COMPILER_PATH (e.g. /usr/local/cuda-11.8/bin/nvcc and /usr/bin/g++-11, respectively).
+| Option                | Description                         | Default value |
+| :-------------------- | :---------------------------------- | :------------ |
+| ```-DUSE_OPENMP=ON``` | Enable CPU parallelization          | ```OFF```     |
+| ```-DUSE_CUDA=ON```   | Enable GPU parallelization (NVIDIA) | ```OFF```     |
+
+> NB: If CUDA compiler is not automatically found by CMake, it is possible to specify its location with -DCMAKE_CUDA_COMPILER=COMPILER_PATH and -DCMAKE_CUDA_HOST_COMPILER=HOST_COMPILER_PATH (e.g. /usr/local/cuda-11.8/bin/nvcc and /usr/bin/g++-11, respectively).
 
 ### Usage
 
 To run the program once built:
 
-```
-./scatteringSimulator SETTINGS_FILE
-```
-
-If OpenMP is enabled, you can select the number of threads at runtime:
+#### Linux
 
 ```
-OMP_NUM_THREADS=NUMBER_OF_THREADS ./scatteringSimulator SETTINGS_FILE
+./build/scatteringSimulator SETTINGS_FILE
 ```
+
+#### Windows
+
+```
+.\build\Release\scatteringSimulator.exe SETTINGS_FILE
+```
+
+If OpenMP is enabled, you can select the number of threads at runtime with ```OMP_NUM_THREADS=NUMBER_OF_THREADS```
 
 > If the project is built with USE_CUDA=ON, the program will use the GPU regardless of the USE_OPENMP setting.
 
@@ -83,14 +102,14 @@ where
 
 #### Particle geometries
 
-| Shape | Name | Shape attributes |
-| :--- | :--- | :--- |
-| Sphere | `SPH` | `D` (diameter) |
-| Cylinder | `CYL` | `D` (diameter), `L` (length) |
-| Spherocylinder | `SPHCYL` | `D` (diameter), `L` (length of cylinder) |
-| Box | `BOX` | `a` `b` `c` (axes) |
-| Ellipsoid | `ELL` | `s_a` `s_b` `s_c` (semiaxes) |
-| Superquadric | `SQUAD` | `sa, sb, sc` (semiaxes), `r, s, t` (exponents) |
+| Shape          | Name     | Shape attributes                               |
+| :------------- | :------- | :--------------------------------------------- |
+| Sphere         | `SPH`    | `D` (diameter)                                 |
+| Cylinder       | `CYL`    | `D` (diameter), `L` (length)                   |
+| Spherocylinder | `SPHCYL` | `D` (diameter), `L` (length of cylinder)       |
+| Box            | `BOX`    | `a` `b` `c` (axes)                             |
+| Ellipsoid      | `ELL`    | `s_a` `s_b` `s_c` (semiaxes)                   |
+| Superquadric   | `SQUAD`  | `sa, sb, sc` (semiaxes), `r, s, t` (exponents) |
 
 The `docs` folder contains an example configuration with all available particle types:
 
