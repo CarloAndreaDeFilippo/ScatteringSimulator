@@ -1,19 +1,17 @@
 #include "ScatteringSimulation.hpp"
 
 #include <array>
-#include <boost/filesystem.hpp>
 #include <fstream>
 #include <iostream>
 
 #include "Cogli2.hpp"
+#include "FilesystemUtils.hpp"
 #include "ParticleSystem.hpp"
 #include "ScatteringSystem.hpp"
 
 #ifdef USE_CUDA
 #include "cuda/GPUMemoryManager.hpp"
 #endif
-
-namespace fs = boost::filesystem;
 
 void ScatteringSimulation::startSimulation() {
   std::cout << "#Total configurations: "

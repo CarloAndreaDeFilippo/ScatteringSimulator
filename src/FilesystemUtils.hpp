@@ -1,10 +1,15 @@
 #pragma once
 
-#include <boost/filesystem.hpp>
 #include <iostream>
 #include <sstream>
 
+#ifdef USE_BOOST
+#include <boost/filesystem.hpp>
 namespace fs = boost::filesystem;
+#else
+#include <filesystem>
+namespace fs = std::filesystem;
+#endif
 
 inline std::vector<std::string> listFilesInDir(const std::string& path) {
   std::vector<std::string> fileNames;

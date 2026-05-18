@@ -2,12 +2,9 @@
 
 #include <fstream>
 #include <iostream>
-#include <boost/filesystem.hpp>
 
-#include "Utilities.hpp"
+#include "FilesystemUtils.hpp"
 #include "mathTools.hpp"
-
-namespace fs = boost::filesystem;
 
 void SimulationSettings::loadSettings(const std::string& settingsFile) {
   std::ifstream file(settingsFile);

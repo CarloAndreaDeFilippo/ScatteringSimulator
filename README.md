@@ -1,6 +1,6 @@
 # ScatteringSimulator
 
-C++11 program for simulating scattering in a system of particles with different shapes, parallelized with OpenMP or CUDA.
+C++ program for simulating scattering in a system of particles with different shapes, parallelized with OpenMP or CUDA. Supports C++17 (default) with std::filesystem or C++11 with Boost for legacy cluster compatibility.
 
 ## Theoretical background
 
@@ -21,21 +21,20 @@ Supported on Linux and Windows.
 ### Requirements
 
 * CMake 3.18+
-* C++11 compiler
-* vcpkg: Used for managing C++ libraries. Ensure the ```VCPKG_ROOT``` environment variable is set to your vcpkg installation directory.
+* C++17 compiler (or C++11 with Boost for legacy systems)
 
-### Dependencies
+### Optional Dependencies
 
-The following libraries are required and will be automatically managed by vcpkg:
-* Boost Libraries: specifically boost::filesystem and boost::system
-* OpenMP: optional for parallel computing on CPU
-* CUDA: optional for parallel computing on NVIDIA GPU
+* **vcpkg**: Only required if using `-DUSE_BOOST=ON` for C++11 compatibility. Ensure the `VCPKG_ROOT` environment variable is set to your vcpkg installation directory.
+* **Boost Libraries**: Only with `-DUSE_BOOST=ON` (boost::filesystem and boost::system)
+* **OpenMP**: For CPU parallelization (optional)
+* **CUDA**: For NVIDIA GPU parallelization (optional)
 
 ### Building
 
 Building the project using CMake and presets:
 
-#### Linux
+#### Linux (Default: C++17, std::filesystem)
 
 ```
 cmake --preset linux

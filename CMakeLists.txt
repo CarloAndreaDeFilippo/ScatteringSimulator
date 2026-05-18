@@ -1,17 +1,25 @@
 cmake_minimum_required(VERSION 3.18)
-project(
-    scatteringSimulator
-    LANGUAGES CXX
-    )
+project(scatteringSimulator LANGUAGES CXX)
 
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type")
 endif()
 
-find_package(Boost REQUIRED CONFIG COMPONENTS filesystem system)
-
+option(USE_BOOST "Use Boost for filesystem (C++11 compatible, for legacy clusters)" OFF)
 option(USE_OPENMP "Enable OpenMP support" OFF)
 option(USE_CUDA "Enable CUDA support" OFF)
+
+if(NOT CMAKE_CXX_STANDARD)
+    if(USE_BOOST)
+        set(CMAKE_CXX_STANDARD 11)
+    else()
+        set(CMAKE_CXX_STANDARD 17)
+    endif()
+endif()
+
+if(USE_BOOST)
+    find_package(Boost REQUIRED CONFIG COMPONENTS filesystem system)
+endif()
 
 file(GLOB ALL_CPP CONFIGURE_DEPENDS "src/*.cpp")
 
@@ -33,7 +41,6 @@ if(USE_CUDA)
     src/cuda/projection_kernel.cu
     )
 
-    
     set(CMAKE_CUDA_ARCHITECTURES native)    
 
 endif()
@@ -58,7 +65,7 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 
 if(USE_CUDA)
     set_target_properties(${PROJECT_NAME} PROPERTIES
-        CUDA_STANDARD 11
+        CUDA_STANDARD ${CMAKE_CXX_STANDARD}
         CUDA_STANDARD_REQUIRED ON
         CUDA_SEPARABLE_COMPILATION ON
     )
@@ -71,11 +78,12 @@ if(USE_OPENMP)
     target_link_libraries(${PROJECT_NAME} PRIVATE OpenMP::OpenMP_CXX)
 endif()
 
-
-target_link_libraries(${PROJECT_NAME} PRIVATE
-    Boost::filesystem
-    Boost::system
-)
+if(USE_BOOST)
+    target_link_libraries(${PROJECT_NAME} PRIVATE
+        Boost::filesystem
+        Boost::system
+    )
+endif()
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src

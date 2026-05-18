@@ -3,10 +3,10 @@
 #include <string>
 #include <vector>
 
+#include "FilesystemUtils.hpp"
 #include "ScatteringPlane.hpp"
 #include "ScatteringTypes.hpp"
 #include "ScatteringVector.hpp"
-#include "Utilities.hpp"
 #include "nlohmann/json.hpp"
 
 class SimulationSettings {
@@ -20,12 +20,12 @@ class SimulationSettings {
   std::string configurationFolder;
   std::vector<std::string> configurationFiles;
 
-  std::string outputFolder = "Data/";
-  std::string outputFolderRho1D = "Data/rho1D/";
-  std::string outputFolderRho2D = "Data/rho2D/";
+  std::string outputFolder = "Data";
+  std::string outputFolderRho1D = "Data/rho1D";
+  std::string outputFolderRho2D = "Data/rho2D";
 
   bool saveCogli2 = false;
-  std::string cogli2Folder = "Cogli2/";
+  std::string cogli2Folder = "Cogli2";
 
   SimulationSettings() = default;
 
