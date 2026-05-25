@@ -8,14 +8,12 @@
 #include "ScatteringPoint.hpp"
 #include "Transform.hpp"
 
-class Particle
-{
-public:
-  Transform tf; // Particle position and orientation
+class Particle {
+ public:
+  Transform tf;  // Particle position and orientation
 
-  std::unique_ptr<ParticleShape> particleShape; // Geometry of the particle
+  std::unique_ptr<ParticleShape> particleShape;  // Geometry of the particle
 
-  std::vector<ScatteringPoint> generateScatteringPoints(double rhoSP, const std::array<double, 3> &Lbox) const;
-
-  std::string molgl();
+  std::vector<ScatteringPoint> generateScatteringPoints(
+      double rhoSP, const std::array<double, 3>& Lbox) const;
 };

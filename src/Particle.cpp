@@ -25,15 +25,3 @@ std::vector<ScatteringPoint> Particle::generateScatteringPoints(
 
   return sPoints;
 }
-
-std::string Particle::molgl() {
-  std::string output = "";
-
-  //! ONLY DONE FOR BOXES AND SPHEROCYLINDERS AT THE MOMENT
-
-  output += particleShape->molgl(tf);
-
-  output += "\n";
-
-  return output;
-}
